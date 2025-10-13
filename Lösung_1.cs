@@ -1,9 +1,9 @@
 ﻿// Aufgabe 1: Vor- und Nachname kombinieren
 Console.WriteLine("--- Aufgabe 1: Vor- und Nachname kombinieren ---");
 Console.Write("Bitte geben Sie Ihren Vornamen ein: ");
-string? vorname = Console.ReadLine();
+string vorname = Console.ReadLine();
 Console.Write("Bitte geben Sie Ihren Nachnamen ein: ");
-string? nachname = Console.ReadLine();
+string nachname = Console.ReadLine();
 string vollerName = $"{vorname} {nachname}";
 Console.WriteLine($"Ihr voller Name lautet: {vollerName}");
 Console.WriteLine();
@@ -11,7 +11,7 @@ Console.WriteLine();
 // Aufgabe 2: Alter in Tagen berechnen
 Console.WriteLine("--- Aufgabe 2: Alter in Tagen berechnen ---");
 Console.Write("Bitte geben Sie Ihr Alter in Jahren ein: ");
-string? alterInJahrenString = Console.ReadLine();
+string alterInJahrenString = Console.ReadLine();
 int alterInJahren = Convert.ToInt32(alterInJahrenString);
 int alterInTagen = alterInJahren * 365;
 Console.WriteLine($"Du bist ungefähr {alterInTagen} Tage alt.");
@@ -21,16 +21,16 @@ Console.WriteLine();
 Console.WriteLine("--- Aufgabe 3: Der Währungsrechner (Einfach) ---");
 const double EuroToDollar = 1.08;
 Console.Write("Bitte geben Sie einen Euro-Betrag ein: ");
-string? euroBetragString = Console.ReadLine();
+string euroBetragString = Console.ReadLine();
 double euroBetrag = Convert.ToDouble(euroBetragString);
 double dollarBetrag = euroBetrag * EuroToDollar;
-Console.WriteLine($"{euroBetrag:F2} Euro entsprechen {dollarBetrag:F2} US-Dollar.");
+Console.WriteLine($"{euroBetrag} Euro entsprechen {dollarBetrag} US-Dollar.");
 Console.WriteLine();
 
 // Aufgabe 4: Gerade oder Ungerade?
 Console.WriteLine("--- Aufgabe 4: Gerade oder Ungerade? ---");
 Console.Write("Bitte geben Sie eine ganze Zahl ein: ");
-string? zahlString = Console.ReadLine();
+string zahlString = Console.ReadLine();
 int zahl = Convert.ToInt32(zahlString);
 if (zahl % 2 == 0)
 {
@@ -45,7 +45,7 @@ Console.WriteLine();
 // Aufgabe 5: Ticketpreis-Ermittlung
 Console.WriteLine("--- Aufgabe 5: Ticketpreis-Ermittlung ---");
 Console.Write("Bitte geben Sie Ihr Alter ein: ");
-string? alterFuerTicketString = Console.ReadLine();
+string alterFuerTicketString = Console.ReadLine();
 int alterFuerTicket = Convert.ToInt32(alterFuerTicketString);
 if (alterFuerTicket < 6)
 {
@@ -68,11 +68,11 @@ Console.WriteLine();
 // Aufgabe 6: Einfacher Taschenrechner
 Console.WriteLine("--- Aufgabe 6: Einfacher Taschenrechner ---");
 Console.Write("Geben Sie die erste Zahl ein: ");
-string? ersteZahlString = Console.ReadLine();
+string ersteZahlString = Console.ReadLine();
 Console.Write("Geben Sie den Operator ein (+, -, *, /): ");
-string? operatorZeichen = Console.ReadLine();
+string operatorZeichen = Console.ReadLine();
 Console.Write("Geben Sie die zweite Zahl ein: ");
-string? zweiteZahlString = Console.ReadLine();
+string zweiteZahlString = Console.ReadLine();
 
 double ersteZahl = Convert.ToDouble(ersteZahlString);
 double zweiteZahl = Convert.ToDouble(zweiteZahlString);
@@ -106,7 +106,7 @@ Console.WriteLine();
 // Aufgabe 7: Noten in Text umwandeln
 Console.WriteLine("--- Aufgabe 7: Noten in Text umwandeln ---");
 Console.Write("Bitte geben Sie eine Schulnote (1-6) ein: ");
-string? noteString = Console.ReadLine();
+string noteString = Console.ReadLine();
 int note = Convert.ToInt32(noteString);
 string bewertung;
 switch (note)
@@ -139,7 +139,7 @@ Console.WriteLine();
 // Aufgabe 8: Schaltjahr-Rechner
 Console.WriteLine("--- Aufgabe 8: Schaltjahr-Rechner ---");
 Console.Write("Bitte geben Sie eine Jahreszahl ein: ");
-string? jahrString = Console.ReadLine();
+string jahrString = Console.ReadLine();
 int jahr = Convert.ToInt32(jahrString);
 if ((jahr % 4 == 0 && jahr % 100 != 0) || (jahr % 400 == 0))
 {
@@ -154,36 +154,36 @@ Console.WriteLine();
 // Aufgabe 9: Taschenrechner mit Fehlerabfrage
 Console.WriteLine("--- Aufgabe 9: Taschenrechner mit Fehlerabfrage ---");
 Console.Write("Geben Sie die erste Zahl ein: ");
-string? ersteZahlFehlerString = Console.ReadLine();
+string ersteZahlRechnerString = Console.ReadLine();
 Console.Write("Geben Sie den Operator ein (+, -, *, /): ");
-string? operatorFehlerZeichen = Console.ReadLine();
+string operatorRechnerZeichen = Console.ReadLine();
 Console.Write("Geben Sie die zweite Zahl ein: ");
-string? zweiteZahlFehlerString = Console.ReadLine();
+string zweiteZahlRechnerString = Console.ReadLine();
 
-double ersteZahlFehler = Convert.ToDouble(ersteZahlFehlerString);
-double zweiteZahlFehler = Convert.ToDouble(zweiteZahlFehlerString);
-double ergebnisFehler = 0;
+double ersteZahlRechner = Convert.ToDouble(ersteZahlRechnerString);
+double zweiteZahlRechner = Convert.ToDouble(zweiteZahlRechnerString);
+double ergebnisRechner = 0;
 bool gueltigeOperation = true;
-switch (operatorFehlerZeichen)
+switch (operatorRechnerZeichen)
 {
     case "+":
-        ergebnisFehler = ersteZahlFehler + zweiteZahlFehler;
+        ergebnisRechner = ersteZahlRechner + zweiteZahlRechner;
         break;
     case "-":
-        ergebnisFehler = ersteZahlFehler - zweiteZahlFehler;
+        ergebnisRechner = ersteZahlRechner - zweiteZahlRechner;
         break;
     case "*":
-        ergebnisFehler = ersteZahlFehler * zweiteZahlFehler;
+        ergebnisRechner = ersteZahlRechner * zweiteZahlRechner;
         break;
     case "/":
-        if (zweiteZahlFehler == 0)
+        if (zweiteZahlRechner == 0)
         {
             Console.WriteLine("Fehler: Division durch Null ist nicht erlaubt!");
             gueltigeOperation = false;
         }
         else
         {
-            ergebnisFehler = ersteZahlFehler / zweiteZahlFehler;
+            ergebnisRechner = ersteZahlRechner / zweiteZahlRechner;
         }
         break;
     default:
@@ -193,7 +193,7 @@ switch (operatorFehlerZeichen)
 }
 if (gueltigeOperation)
 {
-    Console.WriteLine($"Das Ergebnis ist: {ergebnisFehler}");
+    Console.WriteLine($"Das Ergebnis ist: {ergebnisRechner}");
 }
 Console.WriteLine();
 
@@ -203,12 +203,12 @@ const string correctUser = "admin";
 const string correctPass = "12345";
 
 Console.Write("Benutzername: ");
-string? enteredUser = Console.ReadLine();
+string enteredUser = Console.ReadLine();
 
 if (enteredUser == correctUser)
 {
     Console.Write("Passwort: ");
-    string? enteredPass = Console.ReadLine();
+    string enteredPass = Console.ReadLine();
     if (enteredPass == correctPass)
     {
         Console.WriteLine("Login erfolgreich! Willkommen.");
