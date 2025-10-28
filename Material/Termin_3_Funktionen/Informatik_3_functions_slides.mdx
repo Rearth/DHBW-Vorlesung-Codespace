@@ -1,0 +1,597 @@
+## Informationstechnologie I
+
+### Termin 3: Funktionen – Eigene Methoden schreiben
+
+David Waidner
+
+Note:
+- Begrüßung und Einführung des Themas: Funktionen/Methoden.
+- Betonen: Wichtiges Konzept für sauberen, wiederverwendbaren Code.
+
+---
+
+### Wiederholung
+
+-   **Datentypen und Variablen:** `int`, `string`, `bool`, `double`...
+-   **Operatoren:** Arithmetisch (`+`, `-`, `*`, `/`), Vergleich (`==`, `!=`, `<`, `>`), Logisch (`&&`, `||`, `!`)
+-   **Kontrollstrukturen:**
+    -   **`if-else`**: Entscheidungen treffen
+    -   **`switch`**: Mehrfachauswahl
+    -   **Schleifen**: `for`, `while`, `do-while` für wiederholte Aktionen
+
+Note:
+- Bisherige Themen: Variablen, Operatoren, Kontrollstrukturen.
+- Brücke zum heutigen Thema: Code-Blöcke in wiederverwendbare Einheiten (Methoden) packen.
+
+---
+
+### Was sind Methoden und warum brauchen wir sie?
+
+Typisches Problem: Eine Berechnung muss mehrfach mit unterschiedlichen Parametern ausgeführt werden:
+
+---
+
+**Ohne Methoden:**
+```csharp
+// An Stelle 1
+double radius1 = 5.0;
+double area1 = 3.14159 * radius1 * radius1;
+Console.WriteLine(area1);
+
+// An Stelle 2, viel später im Code...
+double radius2 = 10.0;
+double area2 = 3.14159 * radius2 * radius2;
+Console.WriteLine(area2);
+```
+
+**Probleme:**
+-   **Code-Wiederholung (Duplizierung):** Ineffizient und fehleranfällig. Was, wenn wir `3.14159` zu `Math.PI` ändern wollen?
+-   **Lesbarkeit:** Der Code wird unübersichtlich.
+-   **Wartbarkeit:** Änderungen müssen an vielen Stellen durchgeführt werden.
+
+Note:
+- Beispiel: Flächeninhalt eines Kreises mehrfach berechnen.
+- Probleme ohne Methoden: Code-Duplizierung, Fehleranfälligkeit, schlechte Wartbarkeit.
+
+---
+
+### Die Lösung: Methoden!
+
+Eine **Methode** ist ein benannter Block von Code, der eine bestimmte Aufgabe erledigt. Man kann ihn immer wieder "aufrufen".
+
+**Mit einer Methode:**
+```csharp
+// 1. Methode definieren (die "Anleitung")
+double CalculateCircleArea(double radius)
+{
+  return Math.PI * radius * radius;
+}
+
+// 2. Methode aufrufen (die "Anleitung" benutzen)
+double area1 = CalculateCircleArea(5.0);
+Console.WriteLine(area1);
+
+double area2 = CalculateCircleArea(10.0);
+Console.WriteLine(area2);
+```
+
+---
+
+**Vorteile:**
+-   **Wiederverwendbarkeit:** Einmal schreiben, überall verwenden.
+-   **Lesbarkeit:** `CalculateCircleArea(5.0)` ist selbsterklärend.
+-   **Wartbarkeit:** Änderungen nur an einer zentralen Stelle.
+-   **Struktur:** Programme werden in logische Einheiten gegliedert.
+
+Note:
+- Methode als "Rezept" oder "Anleitung".
+- Einmal definieren, beliebig oft mit verschiedenen "Zutaten" (Parametern) aufrufen.
+- Prinzip: "Don't Repeat Yourself" (DRY).
+
+---
+
+### Aufbau einer Methode
+
+```csharp
+[Rückgabetyp] [Methodenname]([Parameterliste])
+{
+    // Methoden-Körper: Der Code, der ausgeführt wird
+    return [Wert]; // Nur wenn Rückgabetyp nicht 'void' ist
+}
+```
+
+-   **`Rückgabetyp`**: Welchen Datentyp gibt die Methode zurück? (`int`, `string`, `bool`, ...). 
+`void` bedeutet: "gibt nichts zurück".
+-   **`Methodenname`**: Ein aussagekräftiger Name (z.B. `CalculateSum`).
+-   **`Parameterliste`**: Die "Eingabewerte" der Methode, in Klammern. Können auch leer sein `()`.
+
+Note:
+- Die einzelnen Bestandteile der Funktionssignatur durchgehen. Nameskonvention: PascalCase
+- Lokale Funktionen (Standard bei Top-Level-Statements) brauchen kein `public` oder `static`.
+- `void` erklären: Führt eine Aktion aus, gibt aber kein Ergebnis zurück.
+
+---
+
+### Variablennamen und Gültigkeitsbereiche (Scopes)
+
+Der Name einer Variable, die an eine Methode übergeben wird, muss **nicht** mit dem Namen des Parameters in der Methode übereinstimmen.
+
+```csharp
+void PrintDouble(int value) // Hier heißt der Parameter 'value'
+{
+    Console.WriteLine(value * 2);
+}
+
+int myNumber = 10; // Hier heißt die Variable 'myNumber'
+PrintDouble(myNumber); // Übergibt den *Wert* von myNumber (also 10)
+```
+
+-   **Gültigkeitsbereich (Scope):** Variablen, die innerhalb einer Methode deklariert werden (einschließlich Parametern), sind **lokal**.
+-   Sie existieren nur innerhalb dieser Methode und sind von außen nicht sichtbar.
+-   `myNumber` existiert nur in `Main`. `value` existiert nur in `PrintDouble`.
+
+Note:
+- Wichtiges Konzept: Trennung von Variablennamen (außen) und Parameternamen (innen).
+- Analogie: Der Parameter ist ein "Platzhalter". Beim Aufruf wird der Wert der Variable in diesen Platzhalter kopiert.
+- Scope erklären: Jede Methode hat ihren eigenen, abgeschlossenen Arbeitsbereich.
+
+---
+
+### Beispiel 1: Eine einfache `void`-Methode
+
+Diese Methode führt nur eine Aktion aus und gibt keinen Wert zurück.
+
+```csharp
+// Definition der Methode (als lokale Funktion)
+void SayHello()
+{
+    Console.WriteLine("Hallo Welt!");
+}
+
+// Aufruf der Methode
+SayHello(); // Gibt "Hallo Welt!" aus
+SayHello(); // Gibt "Hallo Welt!" aus
+```
+
+Note:
+- Einfachstes Beispiel: Keine Parameter, kein Rückgabewert.
+- Zeigt die Trennung von Definition und Aufruf.
+- Jeder Aufruf führt den Code im Methoden-Körper aus.
+
+---
+
+### Beispiel 2: Eine Methode mit Rückgabewert
+
+Diese Methode berechnet etwas und gibt das Ergebnis zurück.
+
+```csharp
+// Definition: Gibt einen 'int' zurück (als lokale Funktion)
+int Add(int a, int b)
+{
+    int sum = a + b;
+    return sum; // Das 'return'-Statement beendet die Methode und gibt den Wert zurück
+}
+
+// Aufruf
+int result = Add(5, 3); // result ist jetzt 8
+Console.WriteLine(result);
+
+Console.WriteLine(Add(10, 20)); // Gibt direkt 30 aus
+```
+-   Der Datentyp des `return`-Wertes muss zum `Rückgabetyp` der Methode passen.
+-   Sobald `return` erreicht wird, wird die Methode sofort beendet.
+
+Note:
+- Methode nimmt Parameter entgegen und "verspricht" einen Rückgabewert vom Typ `int`.
+- `return` beendet die Methode und gibt den Wert an den Aufrufer zurück.
+- Das Ergebnis kann in einer Variable gespeichert oder direkt weiterverwendet werden.
+
+---
+
+### Aufgabe 1: Eigener Name ausgeben
+**Ziel:** Eine einfache `void`-Methode ohne Parameter definieren und aufrufen.
+*   Schreibt eine Methode namens `PrintMyName`.
+*   Die Methode soll keinen Rückgabewert haben (`void`) und keine Parameter annehmen.
+*   Innerhalb der Methode, gebt euren vollen Namen auf der Konsole aus.
+*   Ruft die Methode `PrintMyName` in eurem Hauptprogramm genau einmal auf.
+*   Der name selbst ist im Code statisch definiert
+
+---
+
+### Aufgabe 2: Persönliche Begrüßung erstellen
+**Ziel:** Eine Methode mit einem `string`-Parameter und einem `string`-Rückgabewert erstellen.
+*   Schreibt eine Methode `GetGreeting`, die einen `string`-Parameter namens `name` entgegennimmt.
+*   Die Methode soll einen Begrüßungstext nach dem Muster `"Hallo, [name]!"` zusammenbauen und als `string` zurückgeben.
+*   Ruft die Methode mit eurem Namen auf.
+*   Speichert den zurückgegebenen `string` in einer Variable und gebt diese Variable auf der Konsole aus.
+
+---
+
+### Aufgabe 3: Gerade oder Ungerade?
+**Ziel:** Eine Methode mit einem `int`-Parameter und einem `bool`-Rückgabewert implementieren.
+*   Schreibt eine Methode `IsEven`, die einen `int`-Parameter `number` entgegennimmt.
+*   Die Methode soll überprüfen, ob die übergebene Zahl gerade ist.
+*   Wenn die Zahl gerade ist, soll `true` zurückgegeben werden, andernfalls `false`.
+*   **Tipp:** Verwendet den Modulo-Operator (`%`). Eine Zahl ist gerade, wenn `number % 2` das Ergebnis `0` hat.
+*   Testet die Methode, indem ihr sie mit einer geraden und einer ungeraden Zahl aufruft und die Ergebnisse ausgebt.
+
+---
+
+### Parameterübergabe: Call by Value (Standard)
+
+Standardmäßig werden in C# Parameter **"by value"** (als Kopie) übergeben.
+
+-   Die Methode erhält eine **Kopie** des Wertes der Variable.
+-   Änderungen am Parameter **innerhalb** der Methode haben **keine Auswirkung** auf die ursprüngliche Variable außerhalb.
+
+```csharp
+void TryToChange(int number)
+{
+    number = 100; // Ändert nur die lokale Kopie 'number'
+    Console.WriteLine($"Innerhalb der Methode: {number}"); // 100
+}
+
+int myValue = 5;
+TryToChange(myValue);
+Console.WriteLine($"Außerhalb der Methode: {myValue}"); // Immer noch 5!
+```
+
+Note:
+- Wichtiges Konzept: Standard in C# für einfache Datentypen.
+- Analogie: Man übergibt eine Fotokopie, nicht das Original.
+- Änderungen in der Methode beeinflussen die Variable außerhalb nicht.
+
+---
+
+### Parameterübergabe: Call by Reference mit `ref`
+
+Was, wenn wir die ursprüngliche Variable ändern wollen? Dafür gibt es das `ref`-Schlüsselwort.
+
+-   Die Methode erhält eine **Referenz** (die Speicheradresse) auf die ursprüngliche Variable.
+-   Änderungen am Parameter **innerhalb** der Methode ändern auch die Variable **außerhalb**.
+-   Die Variable **muss** vor dem Aufruf initialisiert worden sein.
+
+```csharp
+void Swap(ref int a, ref int b)
+{
+    Console.WriteLine($"Vor dem Tausch: a={a}, b={b}");
+    int temp = a;
+    a = b;
+    b = temp;
+    Console.WriteLine($"Nach dem Tausch: a={a}, b={b}");
+}
+
+int x = 5;
+int y = 10;
+Console.WriteLine($"Vor dem Aufruf: x={x}, y={y}");
+Swap(ref x, ref y); // 'ref' muss auch beim Aufruf angegeben werden!
+Console.WriteLine($"Nach dem Aufruf: x={x}, y={y}"); // x ist jetzt 10, y ist 5!
+```
+
+Note:
+- `ref` wird benutzt, wenn eine Methode eine Variable des Aufrufers ändern soll.
+- Analogie: Man übergibt das Originaldokument.
+- Wichtig: `ref` muss bei der Definition UND beim Aufruf stehen.
+- Variable muss vor dem `ref`-Aufruf einen Wert haben.
+
+---
+
+### Parameterübergabe: `out`-Parameter
+
+`out` ist ähnlich wie `ref`, aber mit einem wichtigen Unterschied:
+
+-   Es wird ebenfalls eine **Referenz** übergeben.
+-   Die Methode **verpflichtet** sich, dem `out`-Parameter einen Wert zuzuweisen, bevor sie endet.
+-   Die Variable **muss nicht** vor dem Aufruf initialisiert sein.
+
+Nützlich, wenn eine Methode mehrere "Ergebnisse" zurückgeben soll.
+
+---
+
+### Parameterübergabe: `out`-Parameter
+
+```csharp
+// Methode, die zwei Werte über 'out'-Parameter zurückgibt
+void GetMinMax(int a, int b, out int min, out int max)
+{
+    if (a < b)
+    {
+        min = a;
+        max = b;
+    }
+    else
+    {
+        min = b;
+        max = a;
+    }
+}
+
+int number1 = 10;
+int number2 = 20;
+int minimum;
+int maximum; // Müssen nicht initialisiert werden
+
+GetMinMax(number1, number2, out minimum, out maximum);
+
+Console.WriteLine($"Die kleinere Zahl ist {minimum}, die größere ist {maximum}.");
+```
+<!--.element: class="stretch" -->
+
+Note:
+- `out` ist ideal, um mehrere Werte aus einer Methode "zurückzugeben".
+- Analogie: Man gibt einen leeren Behälter in die Methode, der gefüllt werden muss.
+- Die aufgerufene Methode ist verpflichtet, dem `out`-Parameter einen Wert zuzuweisen.
+- Beispiel: `int.TryParse` ist der Standard-Anwendungsfall, aber dieses Beispiel ist ohne `try-catch` verständlicher, da dies noch nicht eingeführt wurde.
+
+---
+
+### `ref` vs. `out` vs. `in` - Zusammenfassung
+
+| Schlüsselwort | Zweck                               | Initialisierung nötig? | Wertänderung in Methode? |
+| :------------ | :---------------------------------- | :--------------------- | :----------------------- |
+| (keins)       | Wert übergeben (Kopie)              | Ja                     | Nur die Kopie ändert sich|
+| `ref`         | Wert lesen **und** ändern           | **Ja**                 | Ja, ändert Original      |
+| `out`         | Wert zurückgeben (initialisieren)   | **Nein**               | **Muss** Wert zuweisen   |
+| `in`          | Wert nur lesen (schreibgeschützt)   | Ja                     | **Nein**, nicht erlaubt  |
+
+Das `in`-Schlüsselwort ist wie `ref`, aber es garantiert, dass die Methode den Wert nicht ändern kann. Das ist eine Optimierung für große Datenstrukturen (`structs`), um das Kopieren zu vermeiden, aber gleichzeitig Sicherheit zu geben. Für uns ist es im Moment weniger relevant.
+
+Note:
+- Die Tabelle als zentrale Zusammenfassung der Unterschiede.
+- `ref`: Daten rein und raus.
+- `out`: Daten nur raus.
+- `in`: Daten nur rein (effizient, aber schreibgeschützt). Für Anfänger weniger relevant.
+
+---
+
+### Aufgabe 4: Werte tauschen mit `ref`
+**Ziel:** Die Funktionsweise von `ref` verstehen, um Variablen außerhalb einer Methode zu verändern.
+*   Schreibt eine Methode `Swap`, die zwei `string`-Parameter `a` und `b` als Referenz (`ref`) entgegennimmt.
+*   Innerhalb der Methode sollen die Werte der beiden Variablen vertauscht werden.
+*   **Tipp:** Ihr benötigt eine dritte, temporäre Variable, um einen der Werte zwischenzuspeichern.
+*   Testet die Methode, indem ihr zwei `string`-Variablen deklariert, ihre Werte vor dem Aufruf ausgebt, die `Swap`-Methode aufruft und die Werte danach erneut ausgibt.
+
+---
+
+### Aufgabe 5: Mehrere Werte zurückgeben mit `out`
+**Ziel:** `out`-Parameter verwenden, um mehrere Berechnungsergebnisse aus einer einzigen Methode zu erhalten.
+*   Schreibt eine Methode `GetCircleDetails`, die einen `double`-Parameter `radius` entgegennimmt.
+*   Die Methode soll zusätzlich zwei `out double`-Parameter haben: `circumference` und `area`.
+*   Innerhalb der Methode berechnet ihr den Umfang und die Fläche des Kreises und weist die Ergebnisse den `out`-Parametern zu.
+    *   Formel Umfang: `2 * Math.PI * radius`
+    *   Formel Fläche: `Math.PI * radius * radius`
+*   Ruft die Methode auf. Deklariert die Variablen für die `out`-Parameter direkt beim Aufruf (z.B. `out double c`).
+*   Gebt die beiden zurückgegebenen Werte (Umfang und Fläche) auf der Konsole aus.
+
+Note:
+- Aufgabe A: `ref` praktisch anwenden und verinnerlichen.
+- Aufgabe B: Typischer Anwendungsfall für `out`-Parameter (mehrere Ergebnisse).
+
+---
+
+### Methodenüberladung
+
+Manchmal wollen wir eine Methode haben, die ähnliche Aufgaben für verschiedene Datentypen erledigt. Dafür müssen nicht lauter verschiedene Namen wie z.b. `AddInts`, `AddDoubles` genutzt werden.
+
+**Methodenüberladung** erlaubt es uns, mehrere Methoden mit dem **gleichen Namen** zu definieren, solange sich ihre **Parameterlisten unterscheiden**.
+
+Der Compiler erkennt anhand der übergebenen Argumente, welche Version er aufrufen muss.
+
+---
+
+### Methodenüberladung
+
+```csharp
+// Version 1: Addiert zwei Integer
+int Add(int a, int b)
+{
+    Console.WriteLine("Integer-Version wurde aufgerufen");
+    return a + b;
+}
+
+// Version 2: Addiert zwei Doubles
+double Add(double a, double b)
+{
+    Console.WriteLine("Double-Version wurde aufgerufen");
+    return a + b;
+}
+
+// Version 3: Addiert drei Integer
+int Add(int a, int b, int c)
+{
+    Console.WriteLine("Drei-Integer-Version wurde aufgerufen");
+    return a + b + c;
+}
+
+// Aufrufe
+Add(2, 3);       // Ruft Version 1 auf
+Add(2.5, 3.5);   // Ruft Version 2 auf
+Add(1, 2, 3);    // Ruft Version 3 auf
+```
+<!--.element: class="stretch" -->
+
+---
+
+### Methodenüberladung
+
+Die Unterscheidung erfolgt durch:
+-   Anzahl der Parameter
+-   Datentyp der Parameter
+-   Reihenfolge der Parameter
+
+**Achtung:** Der Rückgabetyp allein reicht für eine Überladung nicht aus!
+
+Note:
+- Gleicher Methodenname für unterschiedliche "Aufgaben".
+- Vereinfacht die API für den Aufrufer (muss sich nur einen Namen merken).
+- Compiler wählt die passende Methode anhand der Argument-Typen und -Anzahl.
+- Wichtig: Unterscheidung nur durch Parameter, nicht durch den Rückgabetyp.
+
+---
+
+### Aufgabe 6: Werte verschiedener Typen ausgeben
+**Ziel:** Das Konzept der Methodenüberladung durch die Implementierung von Methoden mit gleichem Namen, aber unterschiedlichen Parametern, verstehen.
+*   Schreibt eine überladene Methode namens `DisplayValue`.
+*   **Version 1:** Erstellt eine Methode, die einen `int` entgegennimmt und ihn formatiert ausgibt, z.B. `"Ganze Zahl: [wert]"`.
+*   **Version 2:** Erstellt eine Methode, die einen `string` entgegennimmt und ihn als `"Text: [wert]"` ausgibt.
+*   **Version 3:** Erstellt eine Methode, die einen `bool` entgegennimmt und ihn als `"Wahrheitswert: [wert]"` ausgibt.
+*   Ruft jede dieser drei Methoden einmal auf, um zu zeigen, dass je nach übergebenem Datentyp die korrekte Version ausgeführt wird.
+
+Note:
+- Kurze Übung, um das Konzept der Überladung zu festigen.
+- Zeigt, wie derselbe Aufruf (`DisplayValue`) je nach Input anders reagiert.
+
+---
+
+### Rekursion
+
+Eine Methode, die sich selbst aufruft, nennt man **rekursive Methode**.
+
+Jede Rekursion braucht zwei Dinge:
+1.  Einen **Basisfall (oder Anker):** Eine Bedingung, die die Rekursion beendet. Ohne Basisfall entsteht eine Endlosschleife (`StackOverflowException`).
+2.  Einen **rekursiven Aufruf:** Der Aufruf der Methode selbst, der das Problem einem kleineren Teilproblem nähert.
+
+---
+
+### Rekursion
+
+**Beispiel: Fakultät berechnen (n!)**
+`5! = 5 * 4 * 3 * 2 * 1`
+`n! = n * (n-1)!`
+
+```csharp
+int Factorial(int n)
+{
+    // 1. Basisfall: Wenn n = 0 oder 1, ist das Ergebnis 1
+    if (n <= 1)
+    {
+        return 1;
+    }
+    // 2. Rekursiver Aufruf: n * Fakultät von (n-1)
+    else
+    {
+        return n * Factorial(n - 1);
+    }
+}
+
+// Aufruf: Factorial(4)
+// -> 4 * Factorial(3)
+// -> 4 * (3 * Factorial(2))
+// -> 4 * (3 * (2 * Factorial(1)))
+// -> 4 * (3 * (2 * 1)) = 24
+```
+<!--.element: class="stretch" -->
+
+Note:
+- Konzept kann anfangs abstrakt sein.
+- Wichtigste Regel: Jede Rekursion braucht einen Basisfall (Abbruchbedingung).
+- Zweite Regel: Jeder rekursive Aufruf muss das Problem "verkleinern" und sich dem Basisfall nähern.
+- Fakultät als klassisches, mathematisches Beispiel.
+
+---
+
+### Aufgabe 7: Summe mit Rekursion berechnen
+**Ziel:** Eine rekursive Methode schreiben, die einen Basisfall und einen rekursiven Schritt korrekt implementiert.
+*   Schreibt eine rekursive Methode `SumUpTo(int n)`.
+*   Die Methode soll die Summe aller ganzen Zahlen von 1 bis `n` berechnen (z.B. `SumUpTo(3)` ist `3 + 2 + 1 = 6`).
+*   **Basisfall:** Legt fest, was passieren soll, wenn `n` den Wert 1 erreicht. In diesem Fall ist das Ergebnis einfach 1 und die Rekursion endet.
+*   **Rekursiver Schritt:** Für alle `n > 1` soll die Methode `n` zum Ergebnis von `SumUpTo(n - 1)` addieren.
+*   Testet die Methode mit einer kleinen Zahl wie 4 und gebt das Ergebnis aus.
+
+Note:
+- Eigene Anwendung von Rekursion.
+- Basisfall: `SumUpTo(1)` ist 1.
+- Rekursiver Schritt: `SumUpTo(n)` ist `n + SumUpTo(n-1)`.
+
+---
+
+### Praxis: Refactoring
+
+**Refactoring** bedeutet, bestehenden Code umzustrukturieren, um ihn besser lesbar, wartbarer und effizienter zu machen, **ohne seine Funktionalität zu ändern**. Methoden sind dafür das wichtigste Werkzeug.
+
+**Vorher: Alles in einer Datei (Spaghetti-Code)**
+```csharp
+Console.WriteLine("Bitte geben Sie Ihren Namen ein:");
+string name = Console.ReadLine();
+
+Console.WriteLine("Bitte geben Sie Ihr Alter ein:");
+string ageInput = Console.ReadLine();
+int age = int.Parse(ageInput);
+
+if (age >= 18)
+{
+    Console.WriteLine($"Hallo {name}, Sie sind volljährig.");
+}
+else
+{
+    Console.WriteLine($"Hallo {name}, Sie sind minderjährig.");
+}
+```
+<!--.element: class="stretch" -->
+
+Note:
+- Refactoring als wichtige praktische Anwendung von Methoden.
+- Ziel: Code aufräumen, ohne die Funktion zu verändern.
+- "Spaghetti-Code" in `Main` als Anti-Pattern aufzeigen.
+
+---
+
+### Praxis: Refactoring
+
+**Nachher: In logische Methoden aufgeteilt**
+```csharp
+string name = GetUserName();
+int age = GetUserAge();
+PrintGreeting(name, age);
+
+string GetUserName()
+{
+    Console.WriteLine("Bitte geben Sie Ihren Namen ein:");
+    return Console.ReadLine();
+}
+
+int GetUserAge()
+{
+    Console.WriteLine("Bitte geben Sie Ihr Alter ein:");
+    string input = Console.ReadLine();
+    return Convert.ToInt32(input);
+}
+
+void PrintGreeting(string name, int age)
+{
+    if (age >= 18)
+    {
+        Console.WriteLine($"Hallo {name}, Sie sind volljährig.");
+    }
+    else
+    {
+        Console.WriteLine($"Hallo {name}, Sie sind minderjährig.");
+    }
+}
+```
+<!--.element: class="stretch" -->
+
+Die `Main`-Methode liest sich jetzt wie eine Inhaltsangabe des Programmablaufs.
+
+Note:
+- Jede Methode hat genau eine, klar definierte Aufgabe.
+- Die `Main`-Methode wird zur "Zusammenfassung" des Programmablaufs.
+- Code ist jetzt leichter zu lesen, zu testen und zu erweitern (z.B. Fehlerbehandlung in `GetUserAge`).
+
+---
+
+### Zusammenfassung
+
+-   **Methoden** bündeln Code zu wiederverwendbaren Einheiten.
+-   Sie verbessern **Lesbarkeit, Wartbarkeit und Struktur**.
+-   Eine Methode hat einen **Namen, Rückgabetyp und Parameter**.
+-   **`void`** bedeutet, die Methode gibt nichts zurück.
+-   Parameterübergabe:
+    -   **By Value** (Kopie, Standard)
+    -   **By Reference** mit `ref` (Original wird geändert) und `out` (Original wird initialisiert)
+-   **Methodenüberladung** erlaubt gleiche Namen für unterschiedliche Parameter.
+-   **Rekursion** ist eine Methode, die sich selbst aufruft (Basisfall nicht vergessen!).
+
+Note:
+- Die wichtigsten Punkte des Tages noch einmal kurz wiederholen.
+- Dies sind die Kernkonzepte, die die Studierenden mitnehmen sollten.
