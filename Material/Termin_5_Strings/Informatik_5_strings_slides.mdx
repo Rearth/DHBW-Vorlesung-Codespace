@@ -1,0 +1,477 @@
+---
+title: Informationstechnologie I - Termin 5 Strings (T4SST1005)
+tags: Vorlesung
+slideOptions:
+  transition: fade
+  theme: white
+---
+
+## Informationstechnologie I - Termin 5: Strings (T4SST1005)
+
+David Waidner
+
+Note:
+- Heutiger Fokus: Grundlagen der Textverarbeitung in C#.
+- Zuerst: Wiederholung der Methoden-Grundlagen.
+- Kern-Thema: Der `string`-Datentyp, dessen Eigenschaften und Methoden.
+- Ziel: Souveräner Umgang mit Textdaten in C#-Anwendungen.
+
+---
+
+## Wiederholung: Methodendefinition
+
+Methoden sind wiederverwendbare Codeblöcke, die eine spezifische Aufgabe ausführen. Sie strukturieren den Code und erhöhen die Wartbarkeit.
+
+**Struktur:** `Rückgabetyp Methodenname(Parameterliste)`
+
+```csharp
+// Definition einer Methode zur Addition zweier Ganzzahlen.
+int Add(int a, int b)
+{
+    int sum = a + b;
+    return sum; // 'return' liefert den berechneten Wert zurück.
+}
+```
+
+Note:
+- Eine Methodendefinition deklariert die Signatur und Implementierung der Methode.
+- Die Ausführung des Codes im Methodenkörper erfolgt erst bei einem expliziten Aufruf.
+
+---
+
+## Wiederholung: Methodenaufruf und Rückgabewert
+
+Die Ausführung einer Methode wird durch einen Aufruf initiiert. Der Computer folgt dabei einem präzisen Ablauf.
+
+```csharp
+// Die Methode Add muss zuvor definiert worden sein.
+int Add(int a, int b) { return a + b; }
+
+// Aufruf der Methode und Zuweisung des Rückgabewertes.
+int result = Add(5, 3); 
+Console.WriteLine(result);
+```
+
+**Was passiert hier Schritt für Schritt?**
+1. Der Computer sieht den Aufruf: `Add(5, 3)`.
+2. Er "springt" in den Code der `Add`-Methode.
+3. Er kopiert die Werte: `a` wird zu `5` und `b` wird zu `3`.
+4. Der Code in der Methode wird ausgeführt: `int sum = 5 + 3;` (also `sum = 8`).
+5. Die `return sum;` Anweisung sendet den Wert `8` zurück.
+6. Der Computer "ersetzt" den ursprünglichen Aufruf `Add(5, 3)` durch das Ergebnis `8`.
+7. Die Zeile liest sich für den Computer nun so: `int result = 8;`.
+
+Note:
+- Bei einem Aufruf wird der Programmfluss zur Methode transferiert.
+- Nach Ausführung "ersetzt" der `return`-Wert gedanklich den Methodenaufruf an der Aufrufstelle.
+
+---
+
+## Grundlagen: Texte in der Programmierung
+
+Texte sind Folgen von Zeichen. Jede Plattform speichert Zeichen als Zahlen (Codepoints / Codeunits) — dafür braucht es eine Codierung.
+
+Note:
+- Ein Zeichensatz ordnet Zeichen Zahlen zu.
+- Eine Codierung legt fest, wie diese Zahlen in Bytes gespeichert werden.
+- Wichtige Begriffe: Codepoint, Codeunit, Grapheme (sichtbare Zeichen).
+
+---
+
+## ASCII (kurz)
+
+- Ursprung: 7‑Bit, 128 Zeichen (Steuerzeichen + Basis-Latein).
+- Begrenzt: enthält keine Umlaute, nicht‑lateinische Schriften oder Emojis.
+- Kompatibel: ASCII‑Werte sind Teil der Unicode‑Tabelle (gleiche Werte 0–127).
+
+```csharp
+// kleines beispiel
+char buchstabe = (char)65; // 'A'
+Console.WriteLine(buchstabe);
+```
+
+Note:
+- Gut für historische/kleine Daten; heute meist durch Unicode ersetzt.
+- Beispiel: 'A' = 65 (ASCII und Unicode).
+
+---
+
+## Unicode und C#
+
+- Unicode definiert universelle Codepoints (z. B. U+20AC für '€').
+- Es gibt Encodings: UTF‑8, UTF‑16, UTF‑32.
+- C# verwendet intern UTF‑16:
+  - char ist ein UTF‑16 Codeunit (16 Bit).
+  - string ist eine Folge von UTF‑16‑Codeunits.
+  - Codepoints außerhalb der Basic Multilingual Plane (z. B. viele Emojis) werden als Surrogate-Pair (zwei char) gespeichert.
+
+Note:
+- Deshalb ist string.Length die Anzahl der UTF‑16‑Codeunits, nicht notwendigerweise sichtbarer Zeichen.
+- Für echte "Grapheme" (Benutzerzeichen) und kulturelle Operationen gibt es System.Globalization.StringInfo.
+
+---
+
+```csharp
+// UTF-16 Beispiel
+char euro = '\u20AC';        // '€'
+string emoji = "😀";
+Console.WriteLine(euro);     // €
+Console.WriteLine(emoji);    // 😀
+Console.WriteLine(emoji.Length); // meist 2 => zwei UTF-16 Codeunits (Surrogate Pair)
+```
+
+---
+
+## Codepoint-Notation: U+XXXX
+
+Die Schreibweise "U+20AC" ist die allgemeine Unicode‑Codepoint-Notation: "U+" gefolgt von einer hexadezimalen Zahl.
+- "20AC" ist hexadezimal; in dezimal entspricht das 8364 → das Euro‑Symbol (€).
+- In C# verwendet man für solche Werte Escape‑Sequenzen: '\uXXXX' (4 Hex) für BMP‑Codepoints oder '\UXXXXXXXX' (8 Hex) für Werte > U+FFFF.
+
+Note:
+- "U+..." identifiziert ein Unicode‑Zeichen plattformunabhängig.
+- Für Zeichen außerhalb der Basic Multilingual Plane (z. B. viele Emojis) benötigt C# entweder ein \U‑Escape oder ein Surrogate‑Pair in UTF‑16.
+
+```csharp
+// Beispiel
+char euro = '\u20AC';         // U+20AC => '€'
+string grin = "\U0001F600";   // U+1F600 => 😀 (benötigt 8-hex Escape)
+```
+
+---
+
+## Grundlagen: Der Datentyp `char`
+
+Der Datentyp `char` repräsentiert ein *einzelnes* Unicode-Zeichen. Literale dieses Typs werden in einfachen Anführungszeichen deklariert.
+
+```csharp
+char buchstabe = 'A';
+char ziffer = '9';
+char euroSymbol = '€';
+```
+
+Note:
+- `char` ist die fundamentalste Einheit für Text in C#.
+- Er kann Buchstaben, Ziffern, Satz- und Sonderzeichen enthalten.
+
+---
+
+## Grundlagen: Der Datentyp `string`
+
+Der Datentyp `string` repräsentiert eine Sequenz von `char`-Werten. Literale werden in doppelten Anführungszeichen deklariert.
+
+```csharp
+string gruss = "Hallo Welt";
+string einzelnesZeichenAlsString = "A";
+string leererString = "";
+```
+
+Note:
+- Ein `string` kann eine beliebige Anzahl von Zeichen enthalten, auch null Zeichen.
+- Er ist der zentrale Datentyp für die Arbeit mit Texten.
+
+---
+
+## Das Konzept der Immutability (Unveränderlichkeit)
+
+Ein `string` in C# ist **unveränderlich (immutable)**. Ein einmal erstelltes String-Objekt kann nicht mehr modifiziert werden.
+
+- Jede Operation, die einen String scheinbar ändert, erzeugt im Hintergrund ein *neues* String-Objekt.
+
+```csharp
+string text = "Hallo";
+text.ToUpper(); // Erzeugt "HALLO", aber verwirft es sofort wieder.
+Console.WriteLine(text); // Gibt weiterhin "Hallo" aus.
+
+string neuerText = text.ToUpper(); // Das neue Objekt wird gespeichert.
+Console.WriteLine(neuerText); // Gibt "HALLO" aus.
+```
+
+Note:
+- Die Unveränderlichkeit sorgt für vorhersagbares Verhalten und Sicherheit.
+- Das Ergebnis von String-Methoden muss fast immer einer Variable zugewiesen werden.
+
+---
+
+## `Length`-Eigenschaft und Index-Zugriff `[]`
+
+Die `Length`-Eigenschaft gibt die Gesamtzahl der Zeichen an. Der Zugriff auf einzelne Zeichen erfolgt über einen nullbasierten Index `[]`.
+
+```csharp
+string text = "C#-Code"; // text.Length ist 7
+// Index:   0123456
+
+char erstesZeichen = text[0];               // Ergibt 'C'
+char letztesZeichen = text[text.Length - 1]; // Ergibt 'e'
+```
+**Achtung:** Ein Zugriff auf einen ungültigen Index führt zu einer `IndexOutOfRangeException`.
+
+Note:
+- Die nullbasierte Zählung ist ein fundamentales Konzept.
+- Das Muster `Length - 1` für das letzte Element ist universell.
+
+---
+
+## Übung 1: Längen-Validierung
+
+- **Ziel:** Prüfen, ob eine Eingabe eine erwartete Länge hat.
+- **Anforderungen:**
+    1. Bitten Sie den Benutzer um die Eingabe einer 5-stelligen Postleitzahl.
+    2. Prüfen Sie mit der `Length`-Eigenschaft, ob die Eingabe genau 5 Zeichen lang ist.
+    3. Geben Sie eine entsprechende Meldung aus ("Gültige Länge" oder "Ungültige Länge").
+
+---
+
+## Iteration über einen String (`foreach`)
+
+Die `foreach`-Schleife ist der einfachste Weg, jedes Zeichen eines Strings zu durchlaufen, ohne sich um Indizes kümmern zu müssen.
+
+```csharp
+string text = "Hallo";
+
+foreach (char buchstabe in text)
+{
+    // In jeder Iteration enthält 'buchstabe' das nächste Zeichen.
+    Console.WriteLine(buchstabe);
+}
+```
+
+Note:
+- Ideal, wenn Sie jedes Zeichen einmal lesen müssen und dessen Position (Index) nicht relevant ist.
+- Einfache Syntax, weniger fehleranfällig als manuelle Index-Verwaltung.
+
+---
+
+## Iteration über einen String (`for`)
+
+Eine `for`-Schleife bietet volle Kontrolle über den Iterationsprozess, da sie direkt mit dem Index arbeitet.
+
+```csharp
+string text = "C#-Code";
+
+for (int i = 0; i < text.Length; i++)
+{
+    char aktuellesZeichen = text[i];
+    Console.WriteLine($"Index {i}: {aktuellesZeichen}");
+}
+```
+Dies ist notwendig, wenn die Position eines Zeichens für die Logik relevant ist.
+
+Note:
+- Gibt volle Kontrolle über Start, Ende und Schrittweite der Iteration.
+- Unverzichtbar, wenn der Index des Zeichens benötigt wird.
+
+---
+
+## Übung 2: Vokale zählen
+
+- **Ziel:** Die Anzahl der Vokale (a, e, i, o, u) in einem Text zählen.
+- **Anforderungen:**
+    1. Lesen Sie einen Text vom Benutzer ein.
+    2. Erstellen Sie eine Zählvariable und initialisieren Sie sie mit 0.
+    3. Iterieren Sie mit einer `foreach`-Schleife über jedes Zeichen.
+    4. Prüfen Sie in der Schleife, ob das aktuelle Zeichen ein Vokal ist (Groß- und Kleinschreibung ignorieren).
+    5. Erhöhen Sie den Zähler, falls es ein Vokal ist, und geben Sie am Ende die Gesamtanzahl aus.
+
+---
+
+## Übung 3: Palindrom-Prüfung
+
+- **Ziel:** Prüfen, ob ein Wort vorwärts wie rückwärts gelesen dasselbe ist (z.B. "Anna", "Lagerregal").
+- **Anforderungen:**
+    1. Lesen Sie ein Wort vom Benutzer ein.
+    2. Iterieren Sie mit einer `for`-Schleife nur bis zur Mitte des Wortes (`text.Length / 2`).
+    3. Vergleichen Sie in jeder Iteration das Zeichen am Index `i` mit dem Zeichen am spiegelverkehrten Index `text.Length - 1 - i`.
+    4. Wenn ein Paar nicht übereinstimmt, ist es kein Palindrom. Geben Sie eine entsprechende Meldung aus und beenden Sie die Prüfung.
+    5. Wenn die Schleife durchläuft, ist es ein Palindrom.
+
+---
+
+## String-Formatierung: Konkatenation (`+`)
+
+Der `+`-Operator kann Strings verketten (konkatenieren).
+
+```csharp
+string vorname = "Max";
+string nachname = "Mustermann";
+
+string vollerName = vorname + " " + nachname; // "Max Mustermann"
+
+Console.WriteLine("Benutzer: " + vollerName);
+```
+
+Note:
+- Einfach und intuitiv für wenige Verknüpfungen.
+- Bei komplexen Strings wird die Interpolation bevorzugt.
+
+---
+
+## Übung 4: Text umkehren
+
+- **Ziel:** Einen eingegebenen Text Zeichen für Zeichen umkehren.
+- **Anforderungen:**
+    1. Lesen Sie einen Text vom Benutzer ein.
+    2. Erstellen Sie einen neuen, leeren String für das Ergebnis.
+    3. Iterieren Sie mit einer `foreach`- oder `for`-Schleife über den eingegebenen Text.
+    4. Fügen Sie in jeder Iteration das aktuelle Zeichen **vor** den bisherigen Ergebnis-String (z.B. `ergebnis = aktuellesZeichen + ergebnis;`).
+    5. Geben Sie den umgekehrten String aus.
+
+---
+
+## String-Formatierung: Interpolation (`$`)
+
+String-Interpolation ist der moderne und empfohlene Ansatz. Ein `$` leitet den String ein, Variablen stehen in `{}`.
+
+```csharp
+string name = "Anna";
+int alter = 28;
+
+string gruss = $"Name: {name}, Alter: {alter}.";
+
+Console.WriteLine(gruss);
+```
+
+Note:
+- Erhöht die Lesbarkeit, da die finale Struktur im Code sichtbar ist.
+- Sollte als Standardmethode zur String-Formatierung verwendet werden.
+
+---
+
+## Methode: `ToUpper()` / `ToLower()`
+
+Gibt eine neue Zeichenkette zurück, in der alle Buchstaben in Groß- bzw. Kleinbuchstaben umgewandelt wurden.
+
+```csharp
+string original = "MischText";
+string gross = original.ToUpper(); // Ergibt "MISCHTEXT"
+string klein = original.ToLower(); // Ergibt "mischtext"
+```
+
+Note:
+- Nützlich für Vergleiche, bei denen die Groß-/Kleinschreibung ignoriert werden soll.
+- Das Original-Objekt bleibt unverändert.
+
+---
+
+## Methode: `Trim()`
+
+Gibt einen neuen String zurück, bei dem alle führenden und nachgestellten Whitespace-Zeichen entfernt wurden.
+
+```csharp
+string userInput = "   Wichtige Eingabe   ";
+string bereinigt = userInput.Trim(); // Ergibt "Wichtige Eingabe"
+```
+
+Note:
+- Standardvorgehen zur Bereinigung von Benutzereingaben.
+- Verhindert Fehler bei Vergleichen, die durch unsichtbare Zeichen entstehen.
+
+---
+
+## Übung 5: Eingabe normalisieren
+
+- **Ziel:** Eine Benutzereingabe für einen Vergleich vorbereiten.
+- **Anforderungen:**
+    1. Bitten Sie den Benutzer, "Ja" oder "Nein" einzugeben. Erlauben Sie beliebige Groß-/Kleinschreibung und Leerzeichen (z.B. "  jA ").
+    2. Nutzen Sie `Trim()` und `ToLower()` an der Eingabe, um sie zu normalisieren.
+    3. Vergleichen Sie den normalisierten String mit "ja" oder "nein" und geben Sie eine verständliche Rückmeldung aus.
+
+---
+
+## Methode: `IndexOf()`
+
+Sucht nach dem ersten Vorkommen einer Zeichenkette und gibt deren nullbasierten Startindex zurück. Gibt `-1` zurück, wenn nichts gefunden wird.
+
+```csharp
+string text = "Hallo Welt, schöne Welt!";
+int position1 = text.IndexOf("Welt"); // Ergibt 6
+int position2 = text.IndexOf("Erde"); // Ergibt -1
+```
+
+Note:
+- `IndexOf` ist fundamental, um zu prüfen, ob ein Text einen anderen enthält, und wenn ja, wo.
+- Der Rückgabewert `-1` ist die Konvention für "nicht gefunden".
+
+---
+
+## Methode: `Substring()`
+
+Extrahiert einen Teilstring aus einem String.
+
+```csharp
+string text = "Programmieren";
+
+// Ab Startindex bis zum Ende
+string teil1 = text.Substring(8); // Ergibt "ieren"
+
+// Ab Startindex mit einer bestimmten Länge
+string teil2 = text.Substring(0, 4); // Ergibt "Prog"
+```
+
+Note:
+- Oft in Kombination mit `IndexOf` verwendet, um dynamisch Textteile zu extrahieren.
+- Ein häufiger Anwendungsfall ist das Parsen von strukturierten Daten.
+
+---
+
+## Methode: `Replace()`
+
+Gibt einen neuen String zurück, in dem alle Vorkommen einer Zeichenkette durch eine andere ersetzt wurden.
+
+```csharp
+string satz = "Ein guter Tag ist ein schöner Tag.";
+string neuerSatz = satz.Replace("Tag", "Moment"); 
+// Ergibt "Ein guter Moment ist ein schöner Moment."
+```
+
+Note:
+- Nützlich für Korrekturen oder Standardisierungen in Texten.
+- Denken Sie an die Immutability: Das Ergebnis muss zugewiesen werden.
+
+---
+
+## Übung 6: Domain extrahieren
+
+- **Ziel:** Aus einer E-Mail-Adresse den Domain-Namen extrahieren.
+- **Anforderungen:**
+    1. Bitten Sie den Benutzer um die Eingabe einer E-Mail-Adresse.
+    2. Finden Sie die Position des `@`-Zeichens mit `IndexOf`.
+    3. Nutzen Sie `Substring`, um den Text *nach* dem `@`-Zeichen zu extrahieren.
+    4. Geben Sie den extrahierten Domain-Namen aus.
+
+---
+
+## Übung 7: Text zensieren
+
+- **Ziel:** Ein Wort in einem Satz durch Sternchen ersetzen.
+- **Anforderungen:**
+    1. Definieren Sie einen Satz, z.B. `"Das ist ein Test, der ein Test ist."`.
+    2. Bitten Sie den Benutzer um ein Wort, das zensiert werden soll.
+    3. Verwenden Sie `Replace`, um alle Vorkommen des Wortes durch `"****"` zu ersetzen.
+    4. Geben Sie das Ergebnis aus.
+
+---
+
+## Übung 8: Wortzähler
+
+- **Ziel:** Die Anzahl der Wörter in einem Satz zählen.
+- **Anforderungen:**
+    1. Lesen Sie einen Satz vom Benutzer ein und bereinigen Sie ihn mit `Trim()`.
+    2. Initialisieren Sie einen Zähler für die Wörter (z.B. mit 1, wenn der Text nicht leer ist).
+    3. Iterieren Sie mit einer Schleife über jedes Zeichen des Satzes.
+    4. Erhöhen Sie den Zähler jedes Mal, wenn Sie ein Leerzeichen `' '` finden.
+    5. *Zusatz*: Verhindern Sie, dass mehrere Leerzeichen hintereinander den Zähler mehrfach erhöhen.
+
+---
+
+## Übung 9: Passwortanalyse
+
+- **Ziel:** Eine Konsolenanwendung, die ein Passwort nach einfachen Regeln validiert.
+- **Anforderungen:**
+    1. Lesen Sie ein Passwort von der Konsole ein.
+    2. Prüfen Sie folgende Kriterien:
+        -   Mindestlänge von 8 Zeichen (`Length`).
+        -   Vorhandensein von mindestens einer Ziffer.
+        -   Vorhandensein von mindestens einem Großbuchstaben.
+    3. Iterieren Sie hierfür über den String und nutzen Sie Hilfsmethoden wie `char.IsDigit()` und `char.IsUpper()`.
+    4. Geben Sie eine aussagekräftige Rückmeldung an den Benutzer.
