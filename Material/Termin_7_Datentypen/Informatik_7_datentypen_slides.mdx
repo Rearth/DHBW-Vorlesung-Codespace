@@ -1,0 +1,550 @@
+## Informationstechnologie I - Termin 7 Strukturierte Datentypen
+
+David Waidner
+
+Note:
+- Begrüßung der Studierenden.
+- Kurzer Rückblick auf die letzte Stunde (primitive Datentypen, Variablen, Schleifen).
+- Heutiges Thema: Wie können wir viele zusammengehörige Daten effizient verwalten?
+- Einführung in strukturierte Datentypen: Arrays und Enums.
+
+---
+
+## Das Problem: Zu viele Daten
+
+Stellen Sie sich vor, Sie sollen die Noten von 5 Studierenden in Ihrem Programm speichern.
+
+```csharp
+// Das ist machbar, aber unpraktisch:
+int note1 = 1;
+int note2 = 3;
+int note3 = 2;
+int note4 = 1;
+int note5 = 2;
+
+// Wie würden Sie den Durchschnitt berechnen? Mühsam!
+// Was, wenn es 100 Studierende sind?
+```
+
+Wir brauchen eine Möglichkeit, eine **Sammlung** von zusammengehörigen Daten unter **einem einzigen Namen** zu speichern.
+
+**Die Lösung: Arrays**
+
+Note:
+- Verdeutlichen Sie das Problem anhand des Beispiels. Fragen Sie die Studierenden, wie sie das Problem mit 100 Noten lösen würden.
+- Dies schafft die Motivation für das Konzept der Arrays.
+- Eine Variable ist wie ein einzelner Zettel. Ein Array ist wie ein ganzer Notizblock.
+
+---
+
+## Was ist ein Array? (Theorie)
+
+Ein Array ist ein Behälter für eine **feste Anzahl** von Werten des **gleichen Datentyps**.
+
+Man kann es sich vorstellen wie:
+- Eine Kommode mit nummerierten Schubladen.
+- Eine Straße mit nummerierten Häusern.
+- Eine Liste von Einträgen.
+
+Jedes "Fach" (Element) im Array hat eine eindeutige Nummer, den sogenannten **Index**, über den wir es direkt ansprechen können.
+
+
+
+Note:
+- Die Analogie ist entscheidend für das erste Verständnis.
+- Betonen Sie die zwei wichtigsten Eigenschaften: **feste Größe** und **einheitlicher Datentyp**.
+- Das Bild hilft, das Konzept des Index visuell zu verankern.
+
+---
+
+## Wie Arrays im Speicher funktionieren
+
+Wenn Sie ein Array erstellen, reserviert der Computer einen **zusammenhängenden Speicherblock**. Alle Elemente liegen direkt hintereinander.
+
+```csharp
+// Diese Anweisung...
+int[] zahlen = new int[4];
+```
+
+...führt dazu, dass im Speicher Platz für 4 ganze Zahlen direkt nacheinander geschaffen wird.
+
+Weil die Elemente geordnet nebeneinander liegen, kann der Computer die genaue Position eines Elements sofort berechnen (z.B. "gehe zur Startadresse + 3 mal die Größe eines Integers"). Man muss nicht erst die Liste durchsuchen.
+
+Note:
+- Dies ist eine vereinfachte technische Erklärung.
+- Es muss nicht im Detail verstanden werden, aber es hilft zu wissen, *warum* der Zugriff über den Index so effizient ist.
+- Der Begriff "zusammenhängender Speicherblock" ist das Schlüsselwort hier.
+
+---
+
+## 1D-Arrays: Die Syntax der Deklaration
+
+Der erste Schritt zum erstellen eines Arrays ist die **Deklaration**.
+
+```csharp
+int[] noten;
+```
+
+- `int`: Das ist der **Datentyp der Elemente**, die im Array gespeichert werden sollen. In diesem Fall ganze Zahlen. Es könnte auch `string`, `double`, `bool` etc. sein.
+- `[]`: Diese eckigen Klammern sind das **Symbol für ein Array**. Sie sagen dem Compiler: "Achtung, `noten` ist keine einzelne Zahl, sondern eine Sammlung von Zahlen."
+- `noten`: Der frei gewählte **Name unserer Variable**.
+
+Note:
+- Zerlegen Sie die Syntax Stück für Stück.
+- Vergleichen Sie `int note;` mit `int[] noten;`, um den Unterschied klarzumachen.
+- An dieser Stelle existiert das Array noch nicht im Speicher, wir haben nur einen "Platzhalter" dafür geschaffen.
+
+---
+
+## 1D-Arrays: Die Syntax der Initialisierung
+
+Nach der Deklaration müssen wir das Array im Speicher **erstellen** und ihm eine Größe geben. Das nennt man **Initialisierung**.
+
+```csharp
+// Deklaration
+int[] noten;
+
+// Initialisierung
+noten = new int[5];
+```
+
+- `new`: Das ist ein Schlüsselwort in C#. Es weist das System an, **neuen Speicherplatz** für etwas zu reservieren – in diesem Fall für unser Array.
+- `int[5]`: Wir sagen, dass wir ein Array vom Typ `int` mit einer **festen Größe** von 5 Elementen erstellen wollen.
+
+Nach dieser Zeile ist das Array im Speicher vorhanden und mit den Standardwerten für den Datentyp gefüllt (bei `int` ist das `0`).
+
+`noten` sieht jetzt so aus: `{ 0, 0, 0, 0, 0 }`
+
+Note:
+- Betonen, dass `new` den eigentlichen Speicher anfordert.
+- Die Größe ist ab hier **unveränderlich**. Das ist ein fundamentaler Unterschied zu Listen in anderen Programmiersprachen.
+- Zeigen Sie auf, was der Standardwert für andere Typen wäre (`false` für `bool`, `null` für `string`).
+
+---
+
+## 1D-Arrays: Kombinierte Formen
+
+Meistens führt man Deklaration und Initialisierung in einem Schritt durch.
+
+**1. Kombinierte Deklaration und Initialisierung:**
+
+```csharp
+// Erstellt ein Array für 5 ganze Zahlen, alle mit dem Wert 0
+int[] noten = new int[5];
+```
+
+---
+
+**2. Initialisierung mit direkter Wertzuweisung:**
+Wenn Sie die Werte bereits kennen, können Sie diese Abkürzung verwenden. C# ermittelt die Größe des Arrays automatisch.
+
+```csharp
+// Erstellt ein Array der Größe 3 mit den angegebenen Werten
+string[] namen = { "Anna", "Ben", "Clara" }; 
+```
+
+Dies ist die häufigste und praktischste Methode, wenn die Daten von Anfang an bekannt sind.
+
+Note:
+- Die zweite Form (Array-Initializer) ist sehr praktisch und sollte hervorgehoben werden.
+- Klären Sie, dass `new string[]` hier weggelassen werden kann, weil der Compiler den Typ aus der Deklaration kennt.
+
+---
+
+## Zugriff auf Array-Elemente
+
+Der Zugriff auf einzelne Elemente erfolgt über ihren **Index** in eckigen Klammern `[]`. Die Zählung des Index beginnt immer bei **0**!
+- Das 1. Element hat den Index `0`.
+- Das 2. Element hat den Index `1`.
+- Das letzte Element hat den Index `Length - 1`.
+
+```csharp
+string[] namen = { "Anna", "Ben", "Clara" }; // Länge = 3, Indizes = 0, 1, 2
+
+// Lesen des ersten Elements (Index 0)
+Console.WriteLine(namen[0]); // Ausgabe: Anna
+
+// Ändern des zweiten Elements (Index 1)
+namen[1] = "Bob";
+
+// Was passiert hier?
+Console.WriteLine(namen[3]); // FEHLER!
+```
+Dieser Fehler wird `IndexOutOfRangeException` genannt, weil der Index 3 außerhalb des gültigen Bereichs (0 bis 2) liegt.
+
+
+Note:
+- Das Konzept des 0-basierten Index ist eine der häufigsten Fehlerquellen für Anfänger. Wiederholen Sie es mehrmals.
+- Visualisieren Sie die Indizes unter den Elementen: `{"Anna", "Ben", "Clara"}` -> `0, 1, 2`.
+- Erklären Sie den `IndexOutOfRangeException` explizit. Er wird jedem Studierenden früher oder später begegnen.
+
+---
+
+## Übung 1: Einkaufsliste
+
+**Ziel:** Ein Array erstellen und mit Werten füllen.
+
+**Aufgaben:**
+1.  Erstellen Sie ein `string`-Array namens `einkaufsliste` mit einer festen Größe von 4.
+2.  Weisen Sie den vier Plätzen im Array nacheinander die Werte "Milch", "Brot", "Butter" und "Eier" zu. Verwenden Sie dafür den Index-Zugriff (`einkaufsliste[0] = ...`).
+3.  Geben Sie das Element an der dritten Stelle (Index 2) auf der Konsole aus.
+
+Note:
+- Diese Übung festigt die grundlegende Syntax von Deklaration, Initialisierung und Zugriff.
+- Achten Sie darauf, dass die Studierenden den Unterschied zwischen der dritten *Stelle* und dem *Index* 2 verstehen.
+
+---
+
+## Übung 2: Lottozahlen
+
+**Ziel:** Ein Array direkt bei der Erstellung mit Werten initialisieren.
+
+**Aufgaben:**
+1.  Erstellen Sie ein `int`-Array namens `lottozahlen`.
+2.  Initialisieren Sie es direkt mit den folgenden 6 Zahlen: `4, 8, 15, 16, 23, 42`. Verwenden Sie die `{}`-Syntax.
+3.  Ändern Sie die zweite Zahl (Index 1) auf den Wert `9`.
+4.  Geben Sie die erste und die letzte Zahl des Arrays auf der Konsole aus.
+
+Note:
+- Hier wird die verkürzte Initialisierung geübt.
+- Die Aufgabe, die letzte Zahl auszugeben, kann zu einer Diskussion über `lottozahlen.Length - 1` führen.
+
+---
+
+## Iteration mit der `for`-Schleife
+
+Um alle Elemente eines Arrays zu verarbeiten (z.B. ausgeben oder summieren), nutzen wir Schleifen. Die `for`-Schleife ist ideal, wenn wir den Index benötigen.
+
+Jedes Array hat eine `.Length`-Eigenschaft, die uns seine Größe verrät.
+
+```csharp
+string[] fruechte = { "Apfel", "Banane", "Kirsche" }; // Length ist 3
+
+for (int i = 0; i < fruechte.Length; i++)
+{
+  // i durchläuft die Werte 0, 1, 2
+  Console.WriteLine("Index " + i + ": " + fruechte[i]);
+}
+```
+
+---
+
+### Ablauf:
+
+```csharp
+string[] fruechte = { "Apfel", "Banane", "Kirsche" }; // Length ist 3
+
+for (int i = 0; i < fruechte.Length; i++)
+{
+  // i durchläuft die Werte 0, 1, 2
+  Console.WriteLine("Index " + i + ": " + fruechte[i]);
+}
+```
+
+1. `int i = 0`: Die Schleife startet mit Index 0.
+2. `i < fruechte.Length`: Die Bedingung (0 < 3) ist wahr.
+3. Der Code im Block wird ausgeführt. `fruechte[0]` wird ausgegeben.
+4. `i++`: `i` wird zu 1.
+5. Die Bedingung (1 < 3) ist wahr, `fruechte[1]` wird ausgegeben...
+6. ...bis `i` den Wert 3 hat. Die Bedingung (3 < 3) ist falsch und die Schleife endet.
+
+Note:
+- Die Kombination `for (int i = 0; i < array.Length; i++)` ist ein Standardmuster, das Studierende erkennen und anwenden können sollten.
+- Erklären Sie `.Length` als sehr nützlichen Helfer, damit man die Größe nicht manuell im Kopf behalten muss.
+
+---
+
+## Iteration mit der `foreach`-Schleife
+
+Wenn Sie den Index nicht benötigen und nur jedes Element einmal ansehen wollen, ist die `foreach`-Schleife einfacher und lesbarer.
+
+```csharp
+string[] fruechte = { "Apfel", "Banane", "Kirsche" };
+
+foreach (string eineFrucht in fruechte)
+{
+  // 'eineFrucht' ist nacheinander "Apfel", dann "Banane", dann "Kirsche"
+  Console.WriteLine("Leckere Frucht: " + eineFrucht);
+}
+```
+**Wie man es liest:** "Für jeden `string` `eineFrucht` im Array `fruechte`, tue folgendes..."
+
+**Vorteile:**
+- Kürzer und weniger fehleranfällig (keine Index-Fehler).
+- Sehr klar in seiner Absicht: Alle Elemente durchlaufen.
+
+**Nachteil:**
+- Man kann die Elemente des Arrays nicht direkt verändern. Es ist eine reine Lese-Schleife.
+
+**Wichtig**: eineFrucht ist eine Kopie des Wertes. Wenn Sie eineFrucht ändern, bleibt das Array unverändert!
+
+Note:
+- `foreach` ist die bevorzugte Wahl für reines Durchlaufen.
+- Analog zur "foreach" iteration eines strings. Dieses wird intern ähnlich zu einem array von chars behandelt.
+- Die Namensgebung der temporären Variable (`eineFrucht`) ist wichtig. Es sollte immer die Einzahl des Array-Namens sein, um die Lesbarkeit zu erhöhen.
+
+---
+
+## Übung 3: Alle Personen begrüßen
+
+**Ziel:** Ein Array mit einer `foreach`-Schleife durchlaufen.
+
+**Aufgaben:**
+1.  Erstellen Sie ein `string`-Array `freunde` mit den Namen von drei Ihrer Freunde.
+2.  Schreiben Sie eine `foreach`-Schleife, die jeden Namen aus dem Array ausgibt.
+3.  Die Ausgabe sollte für jeden Freund "Hallo, [Name]!" lauten, wobei `[Name]` der jeweilige Name aus dem Array ist.
+
+Note:
+- Diese Übung zeigt den Vorteil der `foreach`-Schleife für einfache Lese-Operationen.
+- Sie ist ideal, um die Syntax von `foreach` zu verinnerlichen.
+
+---
+
+## Übung 4: Notendurchschnitt berechnen
+
+**Ziel:** Mit einer `for`-Schleife die Summe der Elemente eines Arrays berechnen.
+
+**Aufgaben:**
+1.  Erstellen Sie ein `int`-Array `testNoten` mit den Werten `1, 3, 2, 1, 4`.
+2.  Erstellen Sie eine `double`-Variable `summe` und initialisieren Sie sie mit `0`.
+3.  Schreiben Sie eine `for`-Schleife, die alle Noten im Array zu `summe` addiert.
+4.  Geben Sie am Ende die Gesamtsumme auf der Konsole aus.
+5.  **Bonus:** Berechnen und geben Sie auch den Durchschnitt aus (`summe / testNoten.Length`).
+
+Note:
+- Hier wird bewusst eine `for`-Schleife nahegelegt, obwohl `foreach` auch ginge.
+- Die Aufgabe erfordert eine Hilfsvariable (`summe`), ein häufiges Muster.
+- Der Bonus erfordert eine Typumwandlung (implizit, da `summe` ein `double` ist), was ein guter Diskussionspunkt ist.
+
+---
+
+## 2D-Arrays: Tabellen und Gitter
+
+Ein zweidimensionales (2D) Array speichert Daten in einer Tabellenstruktur mit **Zeilen und Spalten**.
+Perfekt für:
+- Ein Schachbrett
+- Ein Tic-Tac-Toe-Spielfeld
+- Einen Sitzplan
+
+```csharp
+// Ein 2D-Array für ein Spielfeld
+int[,] spielfeld;
+```
+
+**Die Syntax:**
+- `int`: Der Datentyp der Elemente.
+- `[,]`: Das Komma in den Klammern signalisiert, dass es sich um ein **2D**-Array handelt (zwei Dimensionen).
+- `spielfeld`: Der Name der Variable.
+
+Note:
+- Nutzen Sie die Analogie zur Excel-Tabelle oder einem Koordinatensystem.
+- Die Anzahl der Kommas bestimmt die Dimension: `[]` = 1D, `[,]` = 2D, `[,,]` = 3D usw.
+
+---
+
+## 2D-Arrays: Initialisierung
+
+**Initialisierung:**
+Wir müssen die Anzahl der Zeilen und Spalten angeben.
+
+```csharp
+// Ein Gitter mit 3 Zeilen und 4 Spalten
+int[,] matrix = new int[3, 4]; 
+```
+
+Die erste Zahl ist die länge in der ersten Dimension (3), die zweite in der 2. Dimension (4)
+
+---
+
+### Initialisierung mit Werten:
+Man verwendet geschweifte Klammern für jede Zeile.
+
+```csharp
+int[,] zahlenMatrix = 
+{
+  { 1, 2, 3 },  // Zeile 0
+  { 4, 5, 6 }   // Zeile 1
+};
+```
+
+Das Ergebnis hat die Dimensionen [2, 3]
+
+**Zugriff**:
+Man benötigt zwei Indizes: `[zeile, spalte]`. Beide beginnen bei 0.
+
+```csharp
+// Zugriff auf die 5 (Zeile 1, Spalte 1)
+int wert = zahlenMatrix[1, 1]; 
+Console.WriteLine(wert); // Ausgabe: 5
+```
+
+Note:
+- Eselsbrücke: "Zeile zuerst, Spalte später" (wie bei ZS).
+- Zeichnen Sie die `zahlenMatrix` an die Tafel und zeigen Sie, wie die Indizes `[1, 1]` auf die 5 zeigen.
+
+---
+
+## 2D-Arrays durchlaufen
+
+Um jedes Element in einem 2D-Array zu besuchen, brauchen wir zwei verschachtelte `for`-Schleifen:
+- Die äußere Schleife für die **Zeilen**.
+- Die innere Schleife für die **Spalten**.
+
+Um die Anzahl der Zeilen und Spalten zu bekommen, nutzen wir `Array.GetLength()`:
+- `matrix.GetLength(0)` gibt die Anzahl der Zeilen (1. Dimension).
+- `matrix.GetLength(1)` gibt die Anzahl der Spalten (2. Dimension).
+
+```csharp
+int[,] matrix = { { 1, 2, 3 }, { 4, 5, 6 } };
+
+// Äußere Schleife für die Zeilen (z = 0 bis 1)
+for (int z = 0; z < matrix.GetLength(0); z++)
+{
+    // Innere Schleife für die Spalten (s = 0 bis 2)
+    for (int s = 0; s < matrix.GetLength(1); s++)
+    {
+        Console.Write(matrix[z, s] + " ");
+    }
+    Console.WriteLine(); // Neue Zeile nach jeder Zeile
+}
+```
+
+Note:
+- Erklären Sie `GetLength(dimension)` sorgfältig. Es ist die robustere Methode im Vergleich zu `.Length` bei mehrdimensionalen Arrays.
+- Führen Sie den Code schrittweise im Kopf oder an der Tafel aus, um zu zeigen, wie die Schleifen das Gitter "abscannen".
+
+---
+
+## Übung 5: Tic-Tac-Toe-Feld (einfach)
+
+**Ziel:** Ein 2D-Array erstellen und einen Wert darin platzieren.
+
+**Aufgaben:**
+1.  Erstellen Sie ein `char` 2D-Array namens `spielfeld` mit 3 Zeilen und 3 Spalten.
+2.  Platzieren Sie das Zeichen 'X' in der Mitte des Feldes (Zeile 1, Spalte 1).
+3.  Platzieren Sie das Zeichen 'O' in der Ecke oben links (Zeile 0, Spalte 0).
+4.  Geben Sie das Gesamte Spielfeld auf der Console aus (mittels 2 verschachtelten Schleifen)
+
+Note:
+- Diese Aufgabe festigt die Syntax für die Erstellung und den Zugriff auf 2D-Arrays.
+- Sie ist die direkte Vorbereitung für die finale, größere Übung.
+
+---
+
+## Das Problem mit "magischen Zahlen"
+
+Stellen Sie sich vor, Sie programmieren den Status einer Bestellung. Sie könnten Zahlen verwenden:
+
+```csharp
+int status = 2; // Was bedeutet 2? In Bearbeitung? Versendet? Storniert?
+
+if (status == 0) { Console.WriteLine("Bestellung ist neu."); }
+else if (status == 1) { Console.WriteLine("Wird bearbeitet."); }
+else if (status == 2) { Console.WriteLine("Versendet."); }
+
+// Das ist schwer lesbar und fehleranfällig. Was, wenn jemand 'status = 5' eingibt?
+```
+
+Diese "nackten" Zahlen im Code, deren Bedeutung nicht sofort klar ist, nennt man **magische Zahlen**. Sie sollten vermieden werden.
+
+**Die Lösung: Enums**
+
+Note:
+- Das Konzept der "Magic Numbers" ist sehr wichtig für sauberen Code.
+- Lassen Sie die Studierenden selbst überlegen, warum der Code schlecht ist. (Schlechte Lesbarkeit, keine Typsicherheit).
+
+---
+
+## Enums: Zahlen einen Namen geben
+
+Ein `enum` (Aufzählung) ist ein eigener Datentyp, der aus einer festen Menge von benannten Konstanten besteht. Er macht Code selbsterklärend.
+
+**Die Syntax der Definition:**
+
+```csharp
+enum Bestellstatus
+{
+  Neu,           // hat intern den Wert 0
+  InBearbeitung, // hat intern den Wert 1
+  Versendet,     // hat intern den Wert 2
+  Storniert      // hat intern den Wert 3
+}
+```
+**Was bedeuten die Teile?**
+- `enum`: Das Schlüsselwort, um eine Aufzählung zu definieren.
+- `Bestellstatus`: Der Name unseres neuen Datentyps.
+- `{ ... }`: Innerhalb der Klammern stehen die möglichen Werte als Namen.
+
+Note:
+- Erklären Sie, dass der Compiler den Namen automatisch die Zahlen 0, 1, 2, ... zuweist.
+- Der Hauptvorteil ist die Lesbarkeit und die "IntelliSense"-Unterstützung in der Entwicklungsumgebung.
+
+---
+
+## Enums im Einsatz
+
+Nach der Definition können wir unseren neuen Datentyp wie jeden anderen verwenden.
+
+```csharp
+// Wir erstellen eine Variable vom Typ Bestellstatus
+Bestellstatus aktuellerStatus = Bestellstatus.Versendet;
+
+Console.WriteLine("Der Status ist: " + aktuellerStatus); // Ausgabe: Versendet
+
+// Enums sind perfekt für switch-Anweisungen
+switch (aktuellerStatus)
+{
+    case Bestellstatus.Neu:
+        Console.WriteLine("Ihre Bestellung wurde entgegengenommen.");
+        break;
+
+    case Bestellstatus.Versendet:
+        Console.WriteLine("Ihre Bestellung ist auf dem Weg!");
+        break;
+    
+    default:
+        Console.WriteLine("Status: " + aktuellerStatus);
+        break;
+}
+```
+<!--.element: class="stretch" -->
+
+Der Code ist jetzt **typsicher** (Sie können keinen ungültigen Wert zuweisen) und **leicht verständlich**.
+
+Note:
+- Zeigen Sie, wie viel lesbarer der `switch`-Block im Vergleich zum `if-else` mit Zahlen ist.
+- Betonen Sie den Sicherheitsaspekt: Eine Variable vom Typ `Bestellstatus` kann nur einen der definierten Werte annehmen. `aktuellerStatus = 5;` würde einen Compiler-Fehler erzeugen.
+
+---
+
+## Übung 6: Ampelsteuerung
+
+**Ziel:** Einen `enum` für einen einfachen Zustand definieren und verwenden.
+
+**Aufgaben:**
+1.  Definieren Sie einen `enum` namens `Ampelphase` mit den Werten `Rot`, `Gelb`, `Gruen`.
+2.  Erstellen Sie eine Variable `aktuellePhase` vom Typ `Ampelphase` und weisen Sie ihr den Wert `Ampelphase.Gruen` zu.
+3.  Schreiben Sie eine `if`-Anweisung, die prüft, ob `aktuellePhase` gleich `Ampelphase.Gruen` ist.
+4.  Wenn die Bedingung zutrifft, geben Sie "Du darfst gehen!" auf der Konsole aus.
+
+Note:
+- Eine sehr grundlegende Übung, um die Enum-Syntax und den Vergleich zu festigen.
+- Dies zeigt den praktischen Nutzen von Enums zur Darstellung von Zuständen.
+
+---
+
+## Übung 7: Interaktives Tic-Tac-Toe
+
+**Ziel:** Eine primitive, partiell spielbare Version von Tic-Tac-Toe erstellen.
+
+**Aufgaben:**
+1.  Erstellen Sie ein `char` 2D-Array `spielfeld` (3x3) und füllen Sie es mit Leerzeichen (`' '`).
+2.  Erstellen Sie eine `char` Variable `aktuellerSpieler` und setzen Sie sie auf `'X'`.
+3.  Starten Sie eine Endlosschleife (`while (true)`).
+4.  **Innerhalb der Schleife:**
+    a. Geben Sie das aktuelle Spielfeld mit verschachtelten `for`-Schleifen aus.
+    b. Fragen Sie den aktuellen Spieler nach seinem Zug (z.B. "Spieler X, gib Zeile und Spalte ein (z.B. 1 1):").
+    c. Lesen Sie die Eingabe des Benutzers mit `Console.ReadLine()`.
+    d. Zerlegen Sie die Eingabe in zwei Zahlen für Zeile und Spalte. **Tipp:** `input.Split(' ')` und `int.Parse()`. Denken Sie daran, 1 abzuziehen, um auf den Array-Index (0-2) zu kommen!
+    e. Setzen Sie das Zeichen von `aktuellerSpieler` an die eingegebene Position im `spielfeld`.
+    f. Wechseln Sie den Spieler: Wenn `aktuellerSpieler` 'X' war, wird er 'O', ansonsten wird er wieder 'X'.
