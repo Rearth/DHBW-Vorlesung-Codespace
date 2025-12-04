@@ -1,0 +1,443 @@
+## Informationstechnologie I - Termin 9 Dynamische Datentypen (T4SST1005)
+
+David Waidner
+
+---
+
+## Das Problem mit Arrays
+
+Arrays sind **statisch**.
+
+```csharp
+// Im RAM werden exakt 3 * 4 Bytes (bei int) reserviert.
+int[] zahlen = new int[3]; 
+zahlen[0] = 10;
+zahlen[1] = 20;
+zahlen[2] = 30;
+```
+
+Szenario: Der Benutzer möchte eine 4. Zahl eingeben.
+Was müssen wir tun?
+
+1.  Neues Array erstellen (Größe 4).
+2.  Alte Werte kopieren.
+3.  Neuen Wert eintragen.
+4.  Altes Array wegwerfen.
+
+**Das ist mühsam und fehleranfällig!**
+
+---
+
+## Die Lösung: Generics
+
+Bevor wir dynamische Listen nutzen, müssen wir **Generics** verstehen.
+C# bietet uns "Schablonen" für Klassen an.
+
+Das Konzept `<T>`:
+*   T steht für **Type**.
+*   Eine Klasse `List<T>` ist eine generische Klasse.
+*   Bei der Erstellung entscheiden wir, was `T` ist.
+
+**Analogie:** Eine Tupperdose.
+Die Dose selbst ist immer gleich. Aber wir können ein Etikett draufkleben: "Nur für Nudeln" oder "Nur für Suppe".
+
+Note:
+*   Generics garantieren **Typsicherheit** zur Compile-Zeit.
+
+---
+
+## Teil 2: Die Liste (`List<T>`)
+
+Der Alleskönner unter den Collections.
+
+Note:
+*   Namespace: `using System.Collections.Generic;` muss vorhanden sein.
+
+---
+
+## List<T>: Die Grundlagen
+
+```csharp
+using System.Collections.Generic;
+
+// T wird zu 'string'
+List<string> namen = new List<string>(); 
+
+// Hinzufügen (Passiert am Ende)
+namen.Add("Alice");
+namen.Add("Bob");
+
+// Zugriff (Wie beim Array)
+Console.WriteLine(namen[0]); // Alice
+```
+
+Der große Unterschied: Wir haben keine Größe angegeben!
+
+---
+
+## Deep Dive: Wie funktioniert eine Liste intern?
+
+Die `List<T>` ist eigentlich ein "Schummel-Paket".
+**Intern benutzt sie immer noch ein Array!**
+
+Aber sie verwaltet dieses Array für uns automatisch.
+
+Wir unterscheiden zwei Begriffe:
+1.  **Count (Anzahl):** Wie viele Elemente hat der User eingefügt?
+2.  **Capacity (Kapazität):** Wie groß ist das interne Array wirklich?
+
+---
+
+## Das Resizing-Verhalten
+
+Beispielablauf:
+
+1.  `new List<int>()` -> Internes Array Größe 0.
+2.  `Add(1)` -> Array voll! -> Neues Array (Größe 4).
+3.  `Add(2)`, `Add(3)`, `Add(4)` -> Passen noch rein.
+4.  `Add(5)` -> Array voll!
+    *   Neues Array (**Größe 8**) erstellen (Verdopplung).
+    *   Kopieren.
+    *   Hinzufügen.
+
+**Regel:** Wenn voll, dann **Kapazität verdoppeln**.
+
+---
+
+## Elemente einfügen und löschen
+
+Da intern ein Array liegt, hat das Löschen Konsequenzen.
+
+**RemoveAt(Index):**
+```csharp
+// [ A, B, C, D, E ]
+buchstaben.RemoveAt(1); // Lösche B
+```
+Was passiert intern?
+1.  Lösche B. Lücke entsteht.
+2.  Verschiebe C, D, E nach vorne (Shift).
+**Ergebnis:** `[ A, C, D, E ]`
+
+**Merke:** Löschen am **Anfang** ist teuer (viel Schieberei). Löschen am **Ende** ist billig.
+
+---
+
+## Methoden Übersicht (List)
+
+*   `Add(item)`: Am Ende anfügen.
+*   `Insert(index, item)`: An bestimmter Stelle einfügen.
+*   `Remove(item)`: Sucht das erste Vorkommen und löscht es.
+*   `RemoveAt(index)`: Löscht an Position.
+*   `Contains(item)`: Prüft, ob Element vorhanden.
+*   `Clear()`: Setzt `Count` auf 0.
+*   `Sort()`: Sortiert die Liste (z.B. A-Z).
+
+---
+
+## Aufgabe 1: Die To-Do Liste
+
+**Thema:** Strings verwalten
+
+1.  Erstellen Sie eine `List<string>` namens `aufgaben`.
+2.  Fügen Sie "Lernen", "Einkaufen", "Schlafen" hinzu.
+3.  "Schlafen" ist nicht so wichtig. Entfernen Sie es wieder (`Remove`).
+4.  Fügen Sie "Programmieren" ganz am Anfang der Liste ein (Index 0).
+5.  Geben Sie alle Aufgaben mit einer `foreach`-Schleife auf der Konsole aus.
+
+Note:
+*   Gehen Sie herum und prüfen Sie auf `using System.Collections.Generic;`.
+
+---
+
+## Aufgabe 2: Der Notenschnitt
+
+**Thema:** Rechnen mit dynamischen Daten
+
+1.  Erstellen Sie eine `List<double>` für Noten.
+2.  Fügen Sie folgende Noten hinzu: `1.3`, `2.7`, `1.0`, `4.0`.
+3.  Berechnen Sie den Durchschnitt:
+    *   Erstellen Sie eine Variable `summe = 0`.
+    *   Iterieren Sie mit `foreach` durch die Liste und addieren Sie jede Note zur Summe.
+    *   Teilen Sie die Summe durch `liste.Count`.
+4.  Geben Sie den Durchschnitt auf der Konsole aus.
+
+Note:
+*   Vorsicht bei der Division, falls Count 0 ist (hier nicht der Fall, aber theoretisch möglich).
+
+---
+
+## Teil 3: Das Dictionary
+
+Der "Schlüsselmeister".
+
+Stellen Sie sich eine Garderobe vor. Sie geben Ihre Jacke ab und erhalten eine Marke mit der Nummer 55.
+Um die Jacke wiederzuholen, müssen Sie nicht alle Jacken durchsuchen. Sie gehen direkt zum Haken 55.
+
+---
+
+## Schlüssel-Wert-Prinzip (Key-Value)
+
+```csharp
+Dictionary<string, string> phonebook = new Dictionary<string, string>();
+
+// Key: "Polizei", Value: "110"
+phonebook.Add("Polizei", "110");
+phonebook.Add("Feuerwehr", "112");
+```
+
+Zugriff ohne Schleife:
+```csharp
+Console.WriteLine(phonebook["Polizei"]); // Ausgabe: 110
+```
+
+*   **Der Key ist der Index.**
+*   Wir definieren selbst, was der Index ist.
+
+Note:
+*   Der Key muss **eindeutig** sein.
+
+---
+
+## Deep Dive: Hashing (Wie funktioniert das?)
+
+Wie kann der Computer aus dem Wort "Polizei" wissen, wo er im Speicher suchen muss?
+
+Das Zauberwort heißt **Hash-Funktion**.
+`"Polizei"` ---> *Hash-Algorithmus* ---> `8492012`
+
+Intern nutzt das Dictionary ein Array.
+Index = `HashWert % ArrayGröße`.
+
+**Fazit:** Egal ob 10 oder 10 Millionen Einträge – der Zugriff dauert immer gleich lang (**O(1)**)!
+
+---
+
+## Dictionary: Wichtige Methoden
+
+```csharp
+var students = new Dictionary<int, string>();
+
+// Sicher Hinzufügen (Schutz vor Duplikaten)
+if (!students.ContainsKey(12345)) {
+    students.Add(12345, "Max Mustermann");
+}
+
+// Sicher Zugreifen (Schutz vor Absturz)
+if (students.ContainsKey(99999)) {
+    Console.WriteLine(students[99999]);
+}
+```
+
+Die Methode `ContainsKey` ist extrem wichtig!
+
+---
+
+## Iteration über Dictionaries
+
+Ein Dictionary speichert `KeyValuePair<TKey, TValue>`.
+
+```csharp
+foreach (KeyValuePair<int, string> entry in students)
+{
+    Console.WriteLine($"Matrikelnr: {entry.Key}, Name: {entry.Value}");
+}
+```
+
+**Achtung:** Die Reihenfolge ist **nicht garantiert**!
+Ein Dictionary ist ein "unsortierter Sack".
+
+---
+
+## Aufgabe 3: Das Login-System
+
+**Thema:** Prüfen von Keys
+
+1.  Erstellen Sie ein `Dictionary<string, string>` namens `userDaten`.
+    *   Key: Benutzername, Value: Passwort.
+2.  Fügen Sie User hinzu: ("admin", "1234") und ("gast", "0000").
+3.  Simulieren Sie einen Login:
+    *   Legen Sie `eingabeUser = "admin"` an.
+    *   Prüfen Sie mit `ContainsKey`, ob der User existiert.
+    *   **Wenn ja:** Geben Sie das Passwort aus `userDaten[...]` aus.
+    *   **Wenn nein:** Geben Sie "User unbekannt" aus.
+
+---
+
+## Aufgabe 4: Die Preisliste
+
+**Thema:** Werte verändern
+
+1.  Erstellen Sie ein `Dictionary<string, double>`, das Produkte (Key) und Preise (Value) speichert.
+2.  Fügen Sie ein: "Apfel" (0.99), "Brot" (2.50), "Kaffee" (4.00).
+3.  Der Benutzer möchte wissen, was ein "Brot" kostet.
+    *   Greifen Sie auf das Element "Brot" zu und speichern Sie den Preis in einer Variable.
+4.  Der Preis von "Kaffee" steigt. Überschreiben Sie den Wert für den Key "Kaffee" mit `4.50`.
+5.  Geben Sie zur Kontrolle alle Preise mit einer Schleife aus.
+
+Note:
+*   Werte überschreiben geht über den Indexer: `liste["Key"] = NeuerWert;`. `Add` würde hier crashen.
+
+---
+
+## Teil 4: Das Set (HashSet<T>)
+
+Die mathematische Menge.
+
+Ein `HashSet<T>` ist im Grunde ein Dictionary, bei dem es **nur Keys und keine Values** gibt.
+
+**Wann nutze ich das?**
+*   Ich will wissen: "Habe ich das schon mal gesehen?"
+*   Ich will Duplikate filtern.
+*   Die Reihenfolge ist mir egal.
+
+---
+
+## HashSet in der Praxis
+
+Beispiel: Lottozahlen (Duplikate verhindern).
+
+```csharp
+HashSet<int> lottoZahlen = new HashSet<int>();
+Random rnd = new Random();
+
+while (lottoZahlen.Count < 6)
+{
+    int neueZahl = rnd.Next(1, 50);
+    
+    // Add gibt 'false' zurück, wenn die Zahl schon da war!
+    bool added = lottoZahlen.Add(neueZahl);
+}
+```
+
+---
+
+## Vertiefung: Mengenoperationen
+
+Wir können Sets vergleichen wie in einem Venn-Diagramm.
+
+*   `UnionWith`: Alles zusammenwerfen (A ∪ B).
+*   `ExceptWith`: Differenz bilden (A \ B).
+*   `SymmetricExceptWith`: Nur das Einzigartige behalten (XOR).
+
+**Beispiel Union:**
+```csharp
+setA.UnionWith(setB); // setA enthält jetzt alles aus A und B
+```
+
+---
+
+## Aufgabe 5: Der E-Mail Filter
+
+**Thema:** Einzigartigkeit (HashSet)
+
+1.  Erstellen Sie ein `HashSet<string>` namens `emails`.
+2.  Fügen Sie "a@test.de" hinzu.
+3.  Fügen Sie "b@test.de" hinzu.
+4.  Fügen Sie "a@test.de" **noch einmal** hinzu.
+5.  Geben Sie `emails.Count` auf der Konsole aus.
+    *   *Frage: Ist das Ergebnis 2 oder 3?*
+
+Note:
+*   Ergebnis muss 2 sein. Das Duplikat wird ignoriert.
+
+---
+
+## Aufgabe 6: Gemeinsame Interessen
+
+**Thema:** Schnittmengen (Intersect)
+
+1.  Erstellen Sie ein HashSet `gruppe1` mit {"Sport", "Musik", "Reisen"}.
+2.  Erstellen Sie ein HashSet `gruppe2` mit {"Musik", "Lesen", "Sport"}.
+3.  Nutzen Sie `gruppe1.IntersectWith(gruppe2)`, um herauszufinden, was **beide** Gruppen gemeinsam haben.
+4.  Geben Sie die verbleibenden Elemente von `gruppe1` aus.
+
+Note:
+*   Lösung: "Sport" und "Musik".
+
+---
+
+## Die Queue (Schlange)
+
+**Prinzip: FIFO (First-In, First-Out)**
+Wer zuerst kommt, mahlt zuerst.
+
+Wie an der Supermarktkasse:
+*   `Enqueue`: Hinten anstellen.
+*   `Dequeue`: Vorne bedient werden.
+
+```csharp
+Queue<string> supermarkt = new Queue<string>();
+supermarkt.Enqueue("Kunde 1");
+supermarkt.Enqueue("Kunde 2");
+
+Console.WriteLine(supermarkt.Dequeue()); // Kunde 1
+```
+
+Note:
+*   Einsatzgebiete: Druckaufträge, Webserver-Anfragen.
+
+---
+
+## Der Stack (Stapel)
+
+**Prinzip: LIFO (Last-In, First-Out)**
+Wie ein Stapel Teller.
+
+*   `Push`: Oben drauflegen.
+*   `Pop`: Oben wegnehmen.
+
+```csharp
+Stack<string> browserHistory = new Stack<string>();
+browserHistory.Push("google.de");
+browserHistory.Push("wikipedia.org"); // Oben
+
+Console.WriteLine(browserHistory.Pop()); // wikipedia.org
+```
+
+Note:
+*   Einsatzgebiete: "Zurück"-Button im Browser, Rückgängig-Funktion (Undo).
+
+---
+
+## Zusammenfassung & Entscheidungshilfe
+
+| Feature | Array `[]` | List `<T>` | Dictionary `<K,V>` | HashSet `<T>` | Queue/Stack |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Größe** | Statisch | Dynamisch | Dynamisch | Dynamisch | Dynamisch |
+| **Zugriff** | Index | Index | Key | - | Nur Anfang/Ende |
+| **Ordnung** | Ja | Ja | Nein | Nein | Streng (FIFO/LIFO) |
+| **Duplikate** | Ja | Ja | Nein (Keys) | Nein | Ja |
+| **Speed** | O(1) | O(1) | **O(1)** | **O(1)** | O(1) |
+
+**Faustregel:**
+1.  Standard -> `List`.
+2.  Suche nach ID -> `Dictionary`.
+3.  Eindeutigkeit -> `HashSet`.
+4.  Reihenfolgezwang -> `Queue` / `Stack`.
+
+---
+
+## Aufgabe 7: Der Drucker
+
+**Thema:** Queue (FIFO)
+
+1.  Erstellen Sie eine `Queue<string>` namens `druckWarteschlange`.
+2.  Fügen Sie "Dokument1.pdf" und "Dokument2.pdf" hinzu (`Enqueue`).
+3.  Der Drucker will wissen, was als nächstes kommt, aber noch nicht drucken.
+    *   Nutzen Sie `Peek` und geben Sie das Ergebnis aus.
+4.  Der Druckvorgang startet. Holen Sie das erste Dokument mit `Dequeue` aus der Schlange und geben Sie "Drucke: ..." aus.
+
+---
+
+## Aufgabe 8: Wort umdrehen
+
+**Thema:** Stack (LIFO)
+
+1.  Erstellen Sie einen `Stack<char>`.
+2.  Nutzen Sie eine `foreach`-Schleife über den String `"HALLO"`, um jeden Buchstaben einzeln auf den Stack zu legen (`Push`).
+3.  Nutzen Sie eine zweite Schleife (z.B. `while(stack.Count > 0)`), um die Buchstaben mit `Pop()` wieder vom Stack zu holen.
+4.  Geben Sie die Buchstaben direkt hintereinander aus (`Console.Write` statt `WriteLine`).
+    *   *Ergebnis sollte "OLLAH" sein.*
+
+Note:
+*   Klassiker-Aufgabe um LIFO zu verstehen.
