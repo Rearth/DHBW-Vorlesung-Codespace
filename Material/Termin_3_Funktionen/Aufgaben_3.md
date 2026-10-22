@@ -1,71 +1,146 @@
+## Arbeitsphase 1: Methoden definieren und aufrufen
+
+**Aufgaben 1 bis 3:** Erst planen, dann programmieren.
+
+- Eine eigene Methode definieren und aufrufen
+- Mehrere Aufrufe in die richtige Reihenfolge bringen
+- Dieselbe Anleitung mehrfach verwenden
+
+Schreiben Sie vor dem Ausführen die erwartete Ausgabe auf. Erklären Sie danach, wann der Methodenkörper ausgeführt wird und wo es anschließend weitergeht.
+
 ### Aufgabe 1: Eigener Name ausgeben
-**Ziel:** Eine einfache `void`-Methode ohne Parameter definieren und aufrufen.
-*   Schreibt eine Methode namens `PrintMyName`.
-*   Die Methode soll keinen Rückgabewert haben (`void`) und keine Parameter annehmen.
-*   Innerhalb der Methode, gebt euren vollen Namen auf der Konsole aus.
-*   Ruft die Methode `PrintMyName` in eurem Hauptprogramm genau einmal auf.
-*   Der name selbst ist im Code statisch definiert
 
----
+**Ziel:** Eine Methode definieren und aufrufen.
 
-### Aufgabe 2: Persönliche Begrüßung erstellen
-**Ziel:** Eine Methode mit einem `string`-Parameter und einem `string`-Rückgabewert erstellen.
-*   Schreibt eine Methode `GetGreeting`, die einen `string`-Parameter namens `name` entgegennimmt.
-*   Die Methode soll einen Begrüßungstext nach dem Muster `"Hallo, [name]!"` zusammenbauen und als `string` zurückgeben.
-*   Ruft die Methode mit eurem Namen auf.
-*   Speichert den zurückgegebenen `string` in einer Variable und gebt diese Variable auf der Konsole aus.
+1. Schreiben Sie `PrintMyName` ohne Parameter und ohne Rückgabewert.
+2. Geben Sie darin Ihren vollständigen Namen als festen Text aus.
+3. Rufen Sie die Methode im Hauptprogramm genau einmal auf.
 
----
+**Kontrolle:** Der Name erscheint genau einmal.
 
-### Aufgabe 3: Gerade oder Ungerade?
-**Ziel:** Eine Methode mit einem `int`-Parameter und einem `bool`-Rückgabewert implementieren.
-*   Schreibt eine Methode `IsEven`, die einen `int`-Parameter `number` entgegennimmt.
-*   Die Methode soll überprüfen, ob die übergebene Zahl gerade ist.
-*   Wenn die Zahl gerade ist, soll `true` zurückgegeben werden, andernfalls `false`.
-*   **Tipp:** Verwendet den Modulo-Operator (`%`). Eine Zahl ist gerade, wenn `number % 2` das Ergebnis `0` hat.
-*   Testet die Methode, indem ihr sie mit einer geraden und einer ungeraden Zahl aufruft und die Ergebnisse ausgebt.
+### Aufgabe 2: Mehrere Bausteine aufrufen
 
----
+**Ziel:** Mehrere Methoden in einer festen Reihenfolge aufrufen.
 
-### Aufgabe 4: Werte tauschen mit `ref`
-**Ziel:** Die Funktionsweise von `ref` verstehen, um Variablen außerhalb einer Methode zu verändern.
-*   Schreibt eine Methode `Swap`, die zwei `string`-Parameter `a` und `b` als Referenz (`ref`) entgegennimmt.
-*   Innerhalb der Methode sollen die Werte der beiden Variablen vertauscht werden.
-*   **Tipp:** Ihr benötigt eine dritte, temporäre Variable, um einen der Werte zwischenzuspeichern.
-*   Testet die Methode, indem ihr zwei `string`-Variablen deklariert, ihre Werte vor dem Aufruf ausgebt, die `Swap`-Methode aufruft und die Werte danach erneut ausgibt.
+1. Schreiben Sie `PrintHeader` und `PrintFooter`, jeweils ohne Parameter mit Rückgabetyp `void`.
+2. `PrintHeader` gibt `Willkommen!` aus, `PrintFooter` gibt `Bis bald!` aus.
+3. Erzeugen Sie im Hauptprogramm: `Willkommen!`, `Programminhalt`, `Bis bald!`.
 
----
+**Kontrolle:** Die Ausgabe folgt der Reihenfolge der Aufrufe.
 
-### Aufgabe 5: Mehrere Werte zurückgeben mit `out`
-**Ziel:** `out`-Parameter verwenden, um mehrere Berechnungsergebnisse aus einer einzigen Methode zu erhalten.
-*   Schreibt eine Methode `GetCircleDetails`, die einen `double`-Parameter `radius` entgegennimmt.
-*   Die Methode soll zusätzlich zwei `out double`-Parameter haben: `circumference` und `area`.
-*   Innerhalb der Methode berechnet ihr den Umfang und die Fläche des Kreises und weist die Ergebnisse den `out`-Parametern zu.
-    *   Formel Umfang: `2 * Math.PI * radius`
-    *   Formel Fläche: `Math.PI * radius * radius`
-*   Ruft die Methode auf. Deklariert die Variablen für die `out`-Parameter direkt beim Aufruf (z.B. `out double c`).
-*   Gebt die beiden zurückgegebenen Werte (Umfang und Fläche) auf der Konsole aus.
+### Aufgabe 3: Eine Anleitung mehrfach verwenden
 
-Note:
-- Aufgabe A: `ref` praktisch anwenden und verinnerlichen.
-- Aufgabe B: Typischer Anwendungsfall für `out`-Parameter (mehrere Ergebnisse).
+**Ziel:** Wiederholte Anweisungen einmal definieren.
 
----
+1. Schreiben Sie `PrintCourseInfo` ohne Parameter mit Rückgabetyp `void`.
+2. Die Methode gibt zwei Zeilen aus: `Informationstechnologie I` und `Eigene Methoden`.
+3. Rufen Sie sie auf, geben Sie im Hauptprogramm `Pause` aus und rufen Sie sie erneut auf.
 
-### Aufgabe 6: Werte verschiedener Typen ausgeben
-**Ziel:** Das Konzept der Methodenüberladung durch die Implementierung von Methoden mit gleichem Namen, aber unterschiedlichen Parametern, verstehen.
-*   Schreibt eine überladene Methode namens `DisplayValue`.
-*   **Version 1:** Erstellt eine Methode, die einen `int` entgegennimmt und ihn formatiert ausgibt, z.B. `"Ganze Zahl: [wert]"`.
-*   **Version 2:** Erstellt eine Methode, die einen `string` entgegennimmt und ihn als `"Text: [wert]"` ausgibt.
-*   **Version 3:** Erstellt eine Methode, die einen `bool` entgegennimmt und ihn als `"Wahrheitswert: [wert]"` ausgibt.
-*   Ruft jede dieser drei Methoden einmal auf, um zu zeigen, dass je nach übergebenem Datentyp die korrekte Version ausgeführt wird.
+**Kontrolle:** Die beiden Aufrufe geben jeweils dieselben zwei Zeilen aus. Dazwischen steht `Pause`. Insgesamt erscheinen fünf Zeilen.
 
---- 
+## Arbeitsphase 2: Eingaben, Ergebnisse und Datenfluss
 
-### Aufgabe 7: Summe mit Rekursion berechnen
-**Ziel:** Eine rekursive Methode schreiben, die einen Basisfall und einen rekursiven Schritt korrekt implementiert.
-*   Schreibt eine rekursive Methode `SumUpTo(int n)`.
-*   Die Methode soll die Summe aller ganzen Zahlen von 1 bis `n` berechnen (z.B. `SumUpTo(3)` ist `3 + 2 + 1 = 6`).
-*   **Basisfall:** Legt fest, was passieren soll, wenn `n` den Wert 1 erreicht. In diesem Fall ist das Ergebnis einfach 1 und die Rekursion endet.
-*   **Rekursiver Schritt:** Für alle `n > 1` soll die Methode `n` zum Ergebnis von `SumUpTo(n - 1)` addieren.
-*   Testet die Methode mit einer kleinen Zahl wie 4 und gebt das Ergebnis aus.
+**Aufgaben 4 bis 6:** Methoden schreiben, verbinden und erklären.
+
+- Parameter und Rückgabewerte nutzen
+- Eine Prüfung und die Textausgabe zusammensetzen
+- Wertkopie, Zuweisung und Gültigkeitsbereich nachvollziehen
+
+Nutzen Sie weiterhin eigene Definitionen und Aufrufe. Trennen Sie Berechnung und Konsolenausgabe und prüfen Sie mehrere Eingabewerte.
+
+### Aufgabe 4: Begrüßung zurückgeben
+
+**Ziel:** Einen Parameter mit einem Rückgabewert kombinieren.
+
+1. Schreiben Sie `GetGreeting` mit dem Parameter `string name` und dem Rückgabetyp `string`.
+2. Geben Sie den Text `"Hallo, " + name + "!"` zurück.
+3. Rufen Sie die Methode mit Ihrem Namen auf.
+4. Speichern Sie das Ergebnis und geben Sie es im Hauptprogramm aus.
+
+**Test:** `GetGreeting("Mia")` liefert `"Hallo, Mia!"`.
+
+### Aufgabe 5: Gerade oder ungerade?
+
+**Ziel:** Eine Prüfung und eine Textbestimmung verbinden.
+
+1. Schreiben Sie `bool IsEven(int number)`. Prüfen Sie, ob `number` ohne Rest durch `2` teilbar ist.
+2. Verwenden Sie das Ergebnis zunächst in `if`/`else`, um `Gerade` oder `Ungerade` auszugeben.
+3. Lagern Sie die Textbestimmung in `string GetParityText(bool even)` aus. Die Methode gibt den passenden Text zurück.
+4. Verbinden Sie beide Methoden im Hauptprogramm. Geben Sie dort den zurückgegebenen Text aus.
+
+**Tests:** `8` und `0` ergeben `Gerade`, `7` ergibt `Ungerade`.
+
+**Tipp:** `%` liefert den Divisionsrest.
+
+### Aufgabe 6: Werte und Aufrufe nachvollziehen
+
+**Ziel:** Wertkopie, Rückgabe und Zuweisung unterscheiden.
+
+```csharp
+int number = 3;
+int first = DoubleValue(number);
+DoubleValue(number);
+number = DoubleValue(number);
+int DoubleValue(int value)
+{
+    value = value * 2;
+    return value;
+}
+```
+
+Welche Werte haben `number` und `first` nach jedem Aufruf? Geben Sie beide am Ende aus. Erklären Sie Zeile 3 und den Gültigkeitsbereich von `value`.
+
+## Arbeitsphase 3: Übergabearten und Rekursion
+
+**Aufgaben 7 bis 10:** Die bisherigen Grundlagen gemeinsam einsetzen.
+
+- Variablen mit `ref` verändern und Ergebnisse mit `out` liefern
+- Mit `TryParse`, `bool` und `in` arbeiten
+- Eine rekursive Methode schreiben und ihre Rückgaben erklären
+
+Planen Sie jeweils Eingaben, Verarbeitung und Ausgabe. Verwenden Sie passende Tests und erklären Sie den Datenfluss bis ins Hauptprogramm.
+
+### Aufgabe 7: Texte mit `ref` tauschen
+
+**Ziel:** Zwei Variablen im Hauptprogramm durch eine Methode ändern.
+
+1. Schreiben Sie `Swap` mit zwei `ref string`-Parametern.
+2. Tauschen Sie die Werte mithilfe einer temporären Variable.
+3. Legen Sie im Hauptprogramm zwei Texte an und geben Sie sie aus.
+4. Rufen Sie `Swap` auf und geben Sie beide Variablen erneut aus.
+
+**Test:** Vor dem Aufruf enthalten die Variablen `"links"` und `"rechts"`. Danach enthalten sie `"rechts"` und `"links"`.
+
+### Aufgabe 8: Kreisumfang und Kreisfläche
+
+**Ziel:** Zwei Ergebnisse mit `out` liefern.
+
+1. Schreiben Sie `GetCircleDetails` mit `double radius`, `out double circumference` und `out double area`; Rückgabetyp `void`.
+2. Berechnen Sie Umfang und Fläche:
+   - Umfang: `2 * Math.PI * radius`
+   - Fläche: `Math.PI * radius * radius`
+3. Deklarieren Sie die Ergebnisvariablen direkt beim Aufruf mit `out double ...` und geben Sie beide Werte aus.
+
+**Tests:** Bei Radius `1` ist der Umfang etwa `6,283` und die Fläche etwa `3,142`. Bei Radius `0` sind beide Ergebnisse `0`.
+
+### Aufgabe 9: Text prüfen und eine Zahl ausgeben
+
+**Ziel:** Rückgabewert, `out`, Bedingung und `in` kombinieren.
+
+1. Legen Sie einen Text `input` an und wandeln Sie ihn mit `int.TryParse` um. Speichern Sie Erfolg und Zahl getrennt.
+2. Bei Erfolg rufen Sie `PrintValue` mit der Zahl auf. Sonst geben Sie `Keine gültige ganze Zahl.` aus.
+3. Schreiben Sie dafür `void PrintValue(in int value)`. Die Methode gibt `value` aus. Schreiben Sie `in` auch beim Aufruf.
+4. Erklären Sie, warum `value = 6;` im Methodenkörper nicht erlaubt wäre. Was wäre bei einem normalen Parameter bzw. bei `ref` anders?
+
+**Tests:** `"42"` ergibt `42`, `"0"` ergibt `0`, `"Hallo"` ergibt die Fehlermeldung.
+
+### Aufgabe 10: Rekursive Summe berechnen und prüfen
+
+**Ziel:** Rekursion mit Rückgabewert und Prüfmethode verbinden.
+
+1. Schreiben Sie `int SumUpTo(int n)` für `n >= 1` selbst.
+2. Bei `n == 1` liefern Sie `1` zurück. Sonst addieren Sie `n` zum Ergebnis von `SumUpTo(n - 1)`.
+3. Speichern Sie das Ergebnis im Hauptprogramm. Prüfen Sie es mit `IsEven` aus Aufgabe 5 und geben Sie Summe sowie `Gerade` oder `Ungerade` aus.
+4. Zeichnen Sie für `SumUpTo(3)` die Aufrufe und Rückgaben auf. Markieren Sie den Basisfall.
+
+**Tests:** `1` ergibt `1` und `Ungerade`, `3` ergibt `6` und `Gerade`, `4` ergibt `10` und `Gerade`.
