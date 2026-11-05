@@ -1,13 +1,5 @@
 # Informationstechnologie I – Skript zu Termin 5: Strings und Textverarbeitung
 
-Dieses Skript erläutert die Begriffe und Werkzeuge aus den Folien. Die Übungen stehen gesammelt in [Aufgaben_5.md](Aufgaben_5.md). Die drei Übungsblöcke folgen auf die jeweils benötigten Grundlagen. Die Beispiele erklären einzelne Werkzeuge; in den Aufgaben kombinieren Sie diese selbst zu einem Programm.
-
-## Lernziele
-
-Nach diesem Termin können Sie den Zusammenhang zwischen Zeichen, Codepoints und Codierungen erklären, `char` und `string` unterscheiden und Texte mit Indizes und Schleifen untersuchen. Sie beachten die Unveränderlichkeit von Strings, bereinigen Eingaben und nutzen Such-, Teiltext- und Ersetzungsoperationen.
-
-Vorausgesetzt werden Variablen, Bedingungen, Schleifen und Methoden. Führen Sie Beispiele einzeln im vorbereiteten Projekt aus. Ersetzen Sie den bisherigen Übungscode, damit Variablennamen nicht mehrfach deklariert werden.
-
 ## 1. Zeichen, Zahlen und Codierungen
 
 Texte begegnen uns etwa in Benutzereingaben, Artikelbezeichnungen und Protokolldateien. Damit ein Computer sie speichern und verarbeiten kann, braucht es gemeinsame Regeln für ihre Darstellung als Zahlen und Bytes.
@@ -269,10 +261,6 @@ Die `Is...`-Methoden liefern `bool`, `char.ToLower` liefert `char`. Die Methoden
 
 `char.IsDigit` erkennt auch Unicode-Dezimalziffern außerhalb von `0` bis `9`. Verlangt eine Aufgabe ausschließlich ASCII-Ziffern, prüfen Sie den Bereich mit `zeichen >= '0' && zeichen <= '9'`.
 
-### Übungsblock 1: Zeichen untersuchen
-
-Bearbeiten Sie jetzt die Aufgaben **1–3** im [Aufgabenblatt](Aufgaben_5.md): Postleitzahl prüfen, Vokale zählen und Passwortanalyse. Dabei verbinden Sie Längenprüfung, Zeichenbedingungen und Schleifen. Planen Sie vor dem Programmieren, welche Werte während der Schleife erhalten bleiben müssen, und testen Sie die Kriterien unabhängig voneinander.
-
 ## 7. Texte aufbauen und bereinigen
 
 ### Konkatenation mit `+`
@@ -360,10 +348,6 @@ string normalisiert = eingabe.Trim().ToLower();
 
 Die beiden Schreibweisen sind Alternativen und werden nicht mit derselben Variablendeklaration zusammen eingefügt. Die ursprüngliche Variable `eingabe` bleibt in beiden Fällen unverändert. „Normalisieren“ meint hier die Vereinheitlichung für einen konkreten Anwendungsfall, nicht die Unicode-Operation `Normalize()`.
 
-### Übungsblock 2: Texte aufbauen und vergleichen
-
-Bearbeiten Sie jetzt die Aufgaben **4–6**: Text umkehren, Antworten vereinheitlichen und Palindrom-Prüfung. Die Werkzeuge sind bekannt; Reihenfolge, Bedingungen und Schleifenlogik entwickeln Sie selbst. Eine Skizze mit Indizes hilft bei Aufgaben, in denen Zeichen in einer anderen Reihenfolge gelesen oder miteinander verglichen werden.
-
 ## 8. Textstellen finden und verarbeiten
 
 ### `IndexOf`: erste Fundstelle suchen
@@ -433,10 +417,6 @@ Console.WriteLine(text);    // Ein Tag ist ein Tag.
 Die gezeigte Überladung ersetzt alle exakt passenden Vorkommen und unterscheidet Groß- und Kleinschreibung. Sie prüft keine Wortgrenzen: Der Suchtext `"Tag"` passt auch in `"Tagung"`. Der alte Suchtext darf nicht leer sein; eine leere Suche löst eine `ArgumentException` aus.
 
 Der Originaltext bleibt unverändert. Möchten Sie Original und Ergebnis vergleichen oder beide ausgeben, bewahren Sie sie in getrennten Variablen auf.
-
-### Übungsblock 3: Textteile verarbeiten
-
-Bearbeiten Sie jetzt die Aufgaben **7–9**: E-Mail-Adresse zerlegen, Suchtext ersetzen und Wörter zählen. Verbinden Sie die Werkzeuge mit eigenen Prüfungen. Legen Sie vorab fest, welche Eingaben gültig sind und was bei fehlenden Trennzeichen, leeren Suchtexten oder mehreren Leerzeichen passieren soll. Die vereinfachten Regeln aus dem Aufgabenblatt bestimmen das erwartete Verhalten.
 
 ## 9. Werkzeugübersicht und typische Fehler
 
