@@ -1,101 +1,126 @@
-## Aufgabe 1: Längen-Validierung
+### Aufgabe 1: Postleitzahl prüfen
 
-- **Ziel:** Prüfen, ob eine Eingabe eine erwartete Länge hat.
-- **Anforderungen:**
-    1. Bitten Sie den Benutzer um die Eingabe einer 5-stelligen Postleitzahl.
-    2. Prüfen Sie mit der `Length`-Eigenschaft, ob die Eingabe genau 5 Zeichen lang ist.
-    3. Geben Sie eine entsprechende Meldung aus ("Gültige Länge" oder "Ungültige Länge").
+**Ziel:** Länge und Inhalt einer Postleitzahl prüfen.
 
----
+**Anforderungen:**
 
-## Aufgabe 2: Vokale zählen
+1. Lesen Sie eine Postleitzahl als Text ein; führende Nullen bleiben erhalten.
+2. Prüfen Sie, ob sie genau 5 Codeeinheiten lang ist und ausschließlich die Ziffern `0` bis `9` enthält.
+3. Geben Sie getrennt aus, ob Länge und Inhalt passen. Gültig ist sie nur, wenn beides erfüllt ist.
 
-- **Ziel:** Die Anzahl der Vokale (a, e, i, o, u) in einem Text zählen.
-- **Anforderungen:**
-    1. Lesen Sie einen Text vom Benutzer ein.
-    2. Erstellen Sie eine Zählvariable und initialisieren Sie sie mit 0.
-    3. Iterieren Sie mit einer `foreach`-Schleife über jedes Zeichen.
-    4. Prüfen Sie in der Schleife, ob das aktuelle Zeichen ein Vokal ist (Groß- und Kleinschreibung ignorieren).
-    5. Erhöhen Sie den Zähler, falls es ein Vokal ist, und geben Sie am Ende die Gesamtanzahl aus.
+**Testfälle:** `"01234"` → gültig; `"1234"` → Länge falsch; `"12a45"` → Inhalt falsch; `""` → ungültig.
 
----
+**Tipp:** Kombinieren Sie `Length`, eine Schleife und Zeichenvergleiche.
 
-## Aufgabe 3: Palindrom-Prüfung
+### Aufgabe 2: Vokale zählen
 
-- **Ziel:** Prüfen, ob ein Wort vorwärts wie rückwärts gelesen dasselbe ist (z.B. "Anna", "Lagerregal").
-- **Anforderungen:**
-    1. Lesen Sie ein Wort vom Benutzer ein.
-    2. Iterieren Sie mit einer `for`-Schleife nur bis zur Mitte des Wortes (`text.Length / 2`).
-    3. Vergleichen Sie in jeder Iteration das Zeichen am Index `i` mit dem Zeichen am spiegelverkehrten Index `text.Length - 1 - i`.
-    4. Wenn ein Paar nicht übereinstimmt, ist es kein Palindrom. Geben Sie eine entsprechende Meldung aus und beenden Sie die Prüfung.
-    5. Wenn die Schleife durchläuft, ist es ein Palindrom.
+**Ziel:** Die Vokale `a`, `e`, `i`, `o`, `u` in einem Text zählen.
 
----
+**Anforderungen:**
 
-## Aufgabe 4: Text umkehren
+1. Lesen Sie einen Text ein und durchlaufen Sie ihn mit `foreach`.
+2. Zählen Sie Vokale unabhängig von Groß-/Kleinschreibung.
+3. Geben Sie Anzahl der Vokale und Gesamtzahl der Codeeinheiten aus.
 
-- **Ziel:** Einen eingegebenen Text Zeichen für Zeichen umkehren.
-- **Anforderungen:**
-    1. Lesen Sie einen Text vom Benutzer ein.
-    2. Erstellen Sie einen neuen, leeren String für das Ergebnis.
-    3. Iterieren Sie mit einer `foreach`- oder `for`-Schleife über den eingegebenen Text.
-    4. Fügen Sie in jeder Iteration das aktuelle Zeichen **vor** den bisherigen Ergebnis-String (z.B. `ergebnis = aktuellesZeichen + ergebnis;`).
-    5. Geben Sie den umgekehrten String aus.
+**Testfälle:** `"Hallo Welt"` → 3 Vokale bei Länge 10; `"AEIOU"` → 5 bei Länge 5; `""` → 0 bei Länge 0.
 
----
+**Tipp:** Überlegen Sie, welche Variable über alle Durchläufe hinweg erhalten bleiben muss.
 
-## Aufgabe 5: Eingabe normalisieren
+### Aufgabe 3: Passwortanalyse
 
-- **Ziel:** Eine Benutzereingabe für einen Vergleich vorbereiten.
-- **Anforderungen:**
-    1. Bitten Sie den Benutzer, "Ja" oder "Nein" einzugeben. Erlauben Sie beliebige Groß-/Kleinschreibung und Leerzeichen (z.B. "  jA ").
-    2. Nutzen Sie `Trim()` und `ToLower()` an der Eingabe, um sie zu normalisieren.
-    3. Vergleichen Sie den normalisierten String mit "ja" oder "nein" und geben Sie eine verständliche Rückmeldung aus.
+**Ziel:** Mehrere Eigenschaften eines Texts untersuchen.
 
----
+**Anforderungen:**
 
-## Aufgabe 6: Domain extrahieren
+1. Lesen Sie einen erfundenen Passworttext ein.
+2. Prüfen Sie: mindestens 8 Codeeinheiten, mindestens eine Ziffer und mindestens ein Großbuchstabe.
+3. Melden Sie für jedes Kriterium, ob es erfüllt ist, und geben Sie ein Gesamtergebnis aus.
 
-- **Ziel:** Aus einer E-Mail-Adresse den Domain-Namen extrahieren.
-- **Anforderungen:**
-    1. Bitten Sie den Benutzer um die Eingabe einer E-Mail-Adresse.
-    2. Finden Sie die Position des `@`-Zeichens mit `IndexOf`.
-    3. Nutzen Sie `Substring`, um den Text *nach* dem `@`-Zeichen zu extrahieren.
-    4. Geben Sie den extrahierten Domain-Namen aus.
+**Testfälle:** `"Hallo123"` → alle erfüllt; `"hallo123"` → Großbuchstabe fehlt; `"A1"` → zu kurz; `""` → keines erfüllt.
 
----
+**Tipp:** Welche Informationen müssen Sie sich während der Schleife merken?
 
-## Aufgabe 7: Text zensieren
+### Aufgabe 4: Text umkehren
 
-- **Ziel:** Ein Wort in einem Satz durch Sternchen ersetzen.
-- **Anforderungen:**
-    1. Definieren Sie einen Satz, z.B. `"Das ist ein Test, der ein Test ist."`.
-    2. Bitten Sie den Benutzer um ein Wort, das zensiert werden soll.
-    3. Verwenden Sie `Replace`, um alle Vorkommen des Wortes durch `"****"` zu ersetzen.
-    4. Geben Sie das Ergebnis aus.
+**Ziel:** Die umgekehrte Reihenfolge eines Texts selbst erzeugen.
 
----
+**Anforderungen:**
 
-## Aufgabe 8: Wortzähler
+1. Lesen Sie einen Text aus einfachen Buchstaben und Leerzeichen ein.
+2. Erzeugen Sie mit einer Schleife und einem Ergebnis-String den Text in umgekehrter Reihenfolge. Verwenden Sie keine fertige Umkehrfunktion.
+3. Geben Sie Original und Ergebnis aus.
 
-- **Ziel:** Die Anzahl der Wörter in einem Satz zählen.
-- **Anforderungen:**
-    1. Lesen Sie einen Satz vom Benutzer ein und bereinigen Sie ihn mit `Trim()`.
-    2. Initialisieren Sie einen Zähler für die Wörter (z.B. mit 1, wenn der Text nicht leer ist).
-    3. Iterieren Sie mit einer Schleife über jedes Zeichen des Satzes.
-    4. Erhöhen Sie den Zähler jedes Mal, wenn Sie ein Leerzeichen `' '` finden.
-    5. *Zusatz*: Verhindern Sie, dass mehrere Leerzeichen hintereinander den Zähler mehrfach erhöhen.
+**Testfälle:** `"Hallo"` → `"ollaH"`; `"Ab C"` → `"C bA"`; `"A"` → `"A"`; `""` → `""`.
 
----
+**Tipp:** Skizzieren Sie zunächst die gewünschte Reihenfolge der Zugriffe für `"ABC"`.
 
-## Aufgabe 9: Passwortanalyse
+### Aufgabe 5: Antworten vereinheitlichen
 
-- **Ziel:** Eine Konsolenanwendung, die ein Passwort nach einfachen Regeln validiert.
-- **Anforderungen:**
-    1. Lesen Sie ein Passwort von der Konsole ein.
-    2. Prüfen Sie folgende Kriterien:
-        -   Mindestlänge von 8 Zeichen (`Length`).
-        -   Vorhandensein von mindestens einer Ziffer.
-        -   Vorhandensein von mindestens einem Großbuchstaben.
-    3. Iterieren Sie hierfür über den String und nutzen Sie Hilfsmethoden wie `char.IsDigit()` und `char.IsUpper()`.
-    4. Geben Sie eine aussagekräftige Rückmeldung an den Benutzer.
+**Ziel:** Benutzereingaben trotz unterschiedlicher Schreibweise erkennen.
+
+**Anforderungen:**
+
+1. Lesen Sie eine Antwort auf eine Ja-/Nein-Frage ein.
+2. Akzeptieren Sie `"ja"` und `"j"` sowie `"nein"` und `"n"`, unabhängig von Groß-/Kleinschreibung und Whitespace an den Rändern.
+3. Geben Sie „Bestätigt“, „Abgelehnt“ oder „Unbekannte Antwort“ aus.
+
+**Testfälle:** `"  jA "`, `"J"` → bestätigt; `" N "` → abgelehnt; `"j a"`, `""` → unbekannt.
+
+**Tipp:** Trennen Sie Bereinigung und Entscheidung gedanklich voneinander.
+
+### Aufgabe 6: Palindrom-Prüfung
+
+**Ziel:** Prüfen, ob ein Wort vorwärts und rückwärts gleich ist.
+
+**Anforderungen:**
+
+1. Lesen Sie ein Wort aus einfachen Buchstaben ein; weisen Sie eine leere Eingabe ab.
+2. Ignorieren Sie die Groß-/Kleinschreibung.
+3. Vergleichen Sie mit einer `for`-Schleife Zeichenpaare von außen bis zur Mitte. Brechen Sie bei einem Unterschied ab.
+4. Geben Sie das Ergebnis nach der Prüfung aus.
+
+**Testfälle:** `"Anna"`, `"Lagerregal"`, `"A"` → ja; `"Auto"` → nein; `""` → ungültige Eingabe.
+
+**Tipp:** Zeichnen Sie die Paare für ein Wort mit 5 und eines mit 6 Buchstaben ein.
+
+### Aufgabe 7: E-Mail-Adresse zerlegen
+
+**Ziel:** Einen strukturierten Text prüfen und in zwei Teile zerlegen.
+
+**Anforderungen:**
+
+1. Lesen Sie eine E-Mail-Adresse ein und entfernen Sie Whitespace an den Rändern.
+2. Verlangen Sie genau ein `@` und nicht leeren Text auf beiden Seiten.
+3. Geben Sie Benutzerteil und Domain getrennt aus. Melden Sie bei verletzten Regeln einen Fehler.
+
+**Testfälle:** `" anna@dhbw.de "` → `"anna"` / `"dhbw.de"`; `"anna"`, `"@dhbw.de"`, `"anna@"`, `"a@@b"` → Fehler.
+
+**Tipp:** Planen Sie zuerst die Prüfungen und danach die Teiltexte.
+
+### Aufgabe 8: Suchtext ersetzen
+
+**Ziel:** Einen Text bearbeiten und das Ergebnis mit dem Original vergleichen.
+
+**Anforderungen:**
+
+1. Lesen Sie einen Satz und einen nicht leeren Suchtext ein.
+2. Ersetzen Sie alle passenden Vorkommen durch `"****"`.
+3. Geben Sie Original und Ergebnis aus. Melden Sie außerdem, ob etwas ersetzt wurde.
+
+**Testfälle:** Satz `"Test und Testlauf"`, Suche `"Test"` → `"**** und ****lauf"`; Suche `"test"` → unverändert; Suche `""` → Fehlermeldung.
+
+**Tipp:** Die Ersetzung berücksichtigt hier Groß-/Kleinschreibung und trifft auch Teilwörter.
+
+### Aufgabe 9: Wörter zählen
+
+**Ziel:** Wörter auch bei mehreren Leerzeichen korrekt zählen.
+
+**Anforderungen:**
+
+1. Lesen Sie einen Satz ein; als Trenner gilt hier nur `' '`.
+2. Zählen Sie mit einer Schleife nicht leere Wortabschnitte. Nutzen Sie kein `Split()`.
+3. Mehrere Leerzeichen sowie Leerzeichen am Anfang und Ende dürfen keine zusätzlichen Wörter erzeugen.
+
+**Testfälle:** `"Hallo Welt"` → 2; `"  Hallo   Welt  "` → 2; `""` und `"   "` → 0; `"Hallo,Welt"` → 1.
+
+**Tipp:** Wann beginnt ein neues Wort? Überlegen Sie, welche Information aus dem vorherigen Durchlauf hilft.

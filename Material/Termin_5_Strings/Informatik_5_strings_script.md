@@ -1,296 +1,464 @@
-# Informationstechnologie I - Skript zu Termin 5: Textverarbeitung
+# Informationstechnologie I – Skript zu Termin 5: Strings und Textverarbeitung
 
-## 1. Grundlagen: Texte in der Programmierung
+Dieses Skript erläutert die Begriffe und Werkzeuge aus den Folien. Die Übungen stehen gesammelt in [Aufgaben_5.md](Aufgaben_5.md). Die drei Übungsblöcke folgen auf die jeweils benötigten Grundlagen. Die Beispiele erklären einzelne Werkzeuge; in den Aufgaben kombinieren Sie diese selbst zu einem Programm.
 
-In der Informatik sind Texte fundamental eine Folge von Zeichen. Damit ein Computer diese Zeichen speichern und verarbeiten kann, müssen sie in eine numerische Form umgewandelt werden. Dieser Prozess wird als **Zeichencodierung** bezeichnet. Jede Plattform, von Ihrem Betriebssystem bis zur C#-Laufzeitumgebung, speichert Zeichen intern als Zahlen, sogenannte **Codepoints**.
+## Lernziele
 
-Um diesen Prozess zu verstehen, müssen drei zentrale Begriffe unterschieden werden:
+Nach diesem Termin können Sie den Zusammenhang zwischen Zeichen, Codepoints und Codierungen erklären, `char` und `string` unterscheiden und Texte mit Indizes und Schleifen untersuchen. Sie beachten die Unveränderlichkeit von Strings, bereinigen Eingaben und nutzen Such-, Teiltext- und Ersetzungsoperationen.
 
-*   **Zeichensatz (Character Set):** Ein Zeichensatz ist eine Sammlung von Zeichen, denen jeweils eine eindeutige, abstrakte Nummer zugewiesen wird. Diese Nummer nennt man **Codepoint**. Man kann sich einen Zeichensatz als ein riesiges Wörterbuch vorstellen, das jedem denkbaren Zeichen (wie 'A', '€' oder '😀') eine Nummer zuordnet. Das Unicode-Konsortium definiert den universellen Zeichensatz, der nahezu alle Schriftzeichen der Welt enthält.
-*   **Zeichencodierung (Character Encoding):** Eine Codierung ist das konkrete Regelwerk, das festlegt, wie die numerischen Codepoints in eine Sequenz von Bytes umgewandelt werden, damit sie in einer Datei oder im Arbeitsspeicher gespeichert werden können. Beispiele für Codierungen sind ASCII, UTF-8 und UTF-16.
-*   **Graphem (Grapheme):** Ein Graphem ist die kleinste semantische Einheit in einem Schriftsystem, die der Benutzer als *ein* Zeichen wahrnimmt. Ein Graphem kann aus einem oder mehreren Codepoints bestehen. Beispielsweise kann ein "ü" als einzelner Codepoint dargestellt werden oder als Kombination aus einem 'u' und einem Umlaut-Diakritikum (¨). Für den Benutzer ist beides ein einzelnes Zeichen.
+Vorausgesetzt werden Variablen, Bedingungen, Schleifen und Methoden. Führen Sie Beispiele einzeln im vorbereiteten Projekt aus. Ersetzen Sie den bisherigen Übungscode, damit Variablennamen nicht mehrfach deklariert werden.
 
-## 2. Der historische Standard: ASCII
+## 1. Zeichen, Zahlen und Codierungen
 
-ASCII (American Standard Code for Information Interchange) ist einer der ältesten und grundlegendsten Zeichensätze.
+Texte begegnen uns etwa in Benutzereingaben, Artikelbezeichnungen und Protokolldateien. Damit ein Computer sie speichern und verarbeiten kann, braucht es gemeinsame Regeln für ihre Darstellung als Zahlen und Bytes.
 
-*   **Ursprung:** ASCII wurde ursprünglich als 7-Bit-Code entworfen, was die Darstellung von 128 (2⁷) verschiedenen Zeichen ermöglicht. Diese umfassen nicht druckbare Steuerzeichen (z. B. für Zeilenumbruch), die Ziffern 0-9, die grundlegenden lateinischen Buchstaben in Groß- und Kleinschreibung sowie einige Satzzeichen.
-*   **Begrenzungen:** Der größte Nachteil von ASCII ist seine Beschränkung auf das englische Alphabet. Zeichen wie deutsche Umlaute (ä, ö, ü), andere europäische Schriftzeichen (z. B. é, ç) oder nicht-lateinische Schriften wie Kyrillisch oder Chinesisch sind nicht enthalten. Auch moderne Symbole wie Emojis fehlen vollständig.
-*   **Kompatibilität:** Trotz seiner Limitierungen ist ASCII von historischer Bedeutung und bildet die Grundlage für modernere Standards. Die ersten 128 Codepoints des Unicode-Standards (von 0 bis 127) sind identisch mit dem ASCII-Zeichensatz, was eine grundlegende Kompatibilität sicherstellt.
+Drei Ebenen sind dabei zu unterscheiden:
 
-In C# kann man ein Zeichen direkt über seinen numerischen Wert erzeugen, was diese Zuordnung verdeutlicht:
+- Ein **Zeichensatz** legt Zeichen und zugehörige Nummern fest. Bei Unicode heißt eine solche Nummer **Codepoint**.
+- Eine **Codierung** legt fest, wie Codepoints als Codeeinheiten bzw. Bytes dargestellt werden. Beispiele sind UTF-8, UTF-16 und UTF-32.
+- Ein **Graphem** entspricht einem vom Benutzer als zusammengehörig wahrgenommenen Zeichen. Es kann aus mehreren Codepoints bestehen.
 
-```csharp
-// Der ASCII- und Unicode-Wert für 'A' ist 65.
-// Durch das "Casting" mit (char) wird die Zahl 65 
-// als Zeichen interpretiert.
-char buchstabe = (char)65; 
-Console.WriteLine(buchstabe); // Ausgabe: A
+So kann ein sichtbares `ü` als einzelner Codepoint oder als `u` gefolgt von einem kombinierenden Umlautzeichen vorliegen. Sichtbares Zeichen, Codepoint und gespeicherte Einheit sind deshalb nicht immer dasselbe.
+
+### ASCII: 128 Zeichen
+
+ASCII (American Standard Code for Information Interchange) ist ein 7-Bit-Code mit 2⁷ = 128 möglichen Werten von 0 bis 127. Dazu gehören Steuerzeichen, Ziffern, grundlegende lateinische Buchstaben und Satzzeichen.
+
+| Dezimal | Zeichen / Bereich | Bedeutung |
+|---|---|---|
+| 0–31 | z. B. 9: Tab, 10: LF, 13: CR | Steuerzeichen |
+| 32 | Leerzeichen | Abstand |
+| 33–47 | z. B. `!`, `"`, `#` | Satz- und Sonderzeichen |
+| 48–57 | `0` … `9` | Ziffern |
+| 58–64 | z. B. `:`, `?`, `@` | Satz- und Sonderzeichen |
+| 65–90 | `A` … `Z` | Großbuchstaben |
+| 91–96 | z. B. `[`, `]`, `_` | Sonderzeichen |
+| 97–122 | `a` … `z` | Kleinbuchstaben |
+| 123–126 | z. B. `{`, `}` | Sonderzeichen |
+| 127 | DEL | Steuerzeichen |
+
+ASCII enthält keine deutschen Umlaute, kein Eurozeichen und keine Emojis. Die Bezeichnung „erweitertes ASCII“ steht nicht für einen einzigen verbindlichen 256-Zeichen-Standard.
+
+```text
+Zeichen      Codewert      Als Byte dargestellt
+   A    →       65    →        01000001
+   B    →       66    →        01000010
 ```
 
-Heute wird reines ASCII kaum noch für allgemeine Textverarbeitung verwendet, aber es bleibt relevant für bestimmte Protokolle oder Dateiformate, die keine komplexen Zeichen benötigen.
+Die zusätzliche führende Null zeigt hier die Darstellung in einem 8-Bit-Byte; der ASCII-Wertebereich benötigt nur 7 Bit.
 
-## 3. Der moderne Standard: Unicode und seine Implementierung in C#
+### Zeichenwert und Zahlenwert
 
-Unicode ist der globale Standard, der das Ziel verfolgt, jedem Zeichen aus jedem Schriftsystem der Welt einen eindeutigen Codepoint zuzuweisen.
-
-*   **Universelle Codepoints:** Unicode definiert eine riesige Tabelle von Codepoints. Die Notation für einen Unicode-Codepoint ist `U+` gefolgt von einer hexadezimalen Zahl, z. B. `U+0041` für 'A' oder `U+20AC` für das Euro-Symbol '€'.
-*   **Encodings:** Um diese Codepoints effizient zu speichern, wurden verschiedene Codierungen entwickelt:
-    *   **UTF-8:** Die heute im Web dominante Codierung. Sie ist variabel in der Byte-Länge: ASCII-Zeichen benötigen nur 1 Byte, während andere Zeichen 2, 3 oder 4 Bytes belegen. Dies macht sie speichereffizient für Texte, die hauptsächlich aus lateinischen Buchstaben bestehen.
-    *   **UTF-16:** Eine Codierung, die meist 2 Bytes (16 Bit) pro Zeichen verwendet. Sie ist der interne Standard in C# und der .NET-Plattform sowie in Betriebssystemen wie Windows.
-    *   **UTF-32:** Eine Codierung mit fester Länge, bei der jedes Zeichen 4 Bytes (32 Bit) belegt. Sie ist einfach zu verarbeiten, aber speicherintensiv.
-
-### Unicode in C#
-
-C# abstrahiert die Komplexität der Codierung weitgehend, aber es ist entscheidend zu verstehen, wie es intern funktioniert:
-
-*   Der Datentyp `char` in C# repräsentiert eine **UTF-16 Codeunit**, also eine 16-Bit-Zahl (2 Bytes).
-*   Der Datentyp `string` ist eine unveränderliche Sequenz von `char`-Werten, also eine Folge von UTF-16 Codeunits.
-
-Die meisten gängigen Zeichen (wie alle lateinischen, griechischen, kyrillischen Zeichen) passen in eine einzelne 16-Bit-Codeunit. Dieser Bereich wird als **Basic Multilingual Plane (BMP)** bezeichnet.
-
-Für Zeichen mit Codepoints oberhalb der BMP (z. B. viele Emojis oder historische Schriftzeichen) reicht eine 16-Bit-Codeunit nicht aus. UTF-16 löst dieses Problem durch sogenannte **Surrogate Pairs**: Ein solches Zeichen wird durch *zwei* aufeinanderfolgende `char`-Werte repräsentiert.
-
-```csharp
-// Das Euro-Symbol hat den Codepoint U+20AC, der in 16 Bit passt.
-char euro = '\u20AC'; // '€'
-
-// Das "grinsende Gesicht"-Emoji hat den Codepoint U+1F600.
-// Dieser Wert ist größer als FFFF (hex) und passt nicht in 16 Bit.
-string emoji = "😀"; 
-
-Console.WriteLine(euro);      // Ausgabe: €
-Console.WriteLine(emoji);     // Ausgabe: 😀
-
-// Die Length-Eigenschaft zählt die UTF-16 Codeunits (char-Werte).
-Console.WriteLine(euro.ToString().Length); // Ausgabe: 1
-Console.WriteLine(emoji.Length);           // Ausgabe: 2
-```
-
-Das Beispiel zeigt, dass `emoji.Length` den Wert `2` liefert, da das Emoji als Surrogate Pair aus zwei `char`-Werten gespeichert wird. Dies ist ein entscheidender Punkt: **`string.Length` gibt nicht die Anzahl der sichtbaren Zeichen (Grapheme) zurück, sondern die Anzahl der UTF-16-Codeunits.** Für die korrekte Verarbeitung von Graphemen bietet C# die Klasse `System.Globalization.StringInfo`.
-
-### Codepoint-Notation in C#
-
-Die `U+XXXX`-Notation ist eine plattformunabhängige Art, ein Unicode-Zeichen zu identifizieren. In C#-Code werden Unicode-Codepoints mit Escape-Sequenzen dargestellt:
-
-*   `\uXXXX`: Für Codepoints innerhalb der BMP (vier hexadezimale Ziffern).
-*   `\UXXXXXXXX`: Für Codepoints außerhalb der BMP (acht hexadezimale Ziffern), die Surrogate Pairs erfordern.
-
-```csharp
-// '\u' für einen 4-stelligen Hex-Wert (BMP)
-char euro = '\u20AC';         // U+20AC => '€'
-
-// '\U' für einen 8-stelligen Hex-Wert. C# erzeugt daraus
-// automatisch das korrekte Surrogate-Pair.
-string grin = "\U0001F600";   // U+1F600 => 😀 
-```
-
-## 4. Fundamentale Datentypen: `char` und `string`
-
-### Der Datentyp `char`
-
-Der Datentyp `char` ist die kleinste Baueinheit für Text in C# und repräsentiert ein einzelnes Unicode-Zeichen (genauer: eine UTF-16-Codeunit). Literale dieses Typs werden in **einfachen Anführungszeichen** (`'`) deklariert.
+In C# können Sie den numerischen Wert einer `char`-Codeeinheit durch einen Cast sichtbar machen:
 
 ```csharp
 char buchstabe = 'A';
-char ziffer = '9';
-char euroSymbol = '€';
+Console.WriteLine((int)buchstabe); // 65
+Console.WriteLine((char)66);      // B
+
+char ziffer = '7';
+Console.WriteLine((int)ziffer);   // 55
 ```
 
-Ein `char` kann Buchstaben, Ziffern, Satzzeichen oder Sonderzeichen enthalten.
+`(int)` wandelt den `char`-Wert in eine ganze Zahl um. `(char)` interpretiert hier die Zahl als UTF-16-Codeeinheit. Das ist keine Umwandlung eines eingegebenen Zahlentexts in dessen Zahlenwert: `'7'` hat den Codewert 55. Die Werte `'7'`, `"7"` und `7` haben die Typen `char`, `string` und `int`.
 
-### Der Datentyp `string`
+## 2. Unicode und seine Codierungen
 
-Der Datentyp `string` repräsentiert eine Sequenz von `char`-Werten. String-Literale werden in **doppelten Anführungszeichen** (`"`) deklariert. Er ist der zentrale Datentyp für die Arbeit mit Texten.
+Unicode umfasst Zeichen aus vielen Schriftsystemen sowie Symbole und Emojis. Die ersten 128 Codepoints stimmen mit ASCII überein.
+
+| Zeichen | Unicode-Codepoint | In ASCII enthalten? |
+|---|---|---|
+| `A` | U+0041 | Ja |
+| `ä` | U+00E4 | Nein |
+| `€` | U+20AC | Nein |
+| `中` | U+4E2D | Nein |
+| `😀` | U+1F600 | Nein |
+
+Die Notation `U+` wird von einer hexadezimalen Zahl gefolgt. Hexadezimale Zahlen verwenden die Ziffern 0–9 und A–F. Beispielsweise entspricht `U+0041` dem Dezimalwert 65. Die Nummer identifiziert den Codepoint; wie das Zeichen auf dem Bildschirm aussieht, hängt unter anderem von der verwendeten Schrift ab.
+
+### UTF-8, UTF-16 und UTF-32
+
+Die Codierung bestimmt die gespeicherte Darstellung eines Unicode-Skalarwerts. Ein Skalarwert ist ein Unicode-Codepoint außerhalb des für Surrogate reservierten Bereichs.
+
+| Codierung | Darstellung pro Skalarwert | `A` | `😀` |
+|---|---|---|---|
+| UTF-8 | 1–4 Bytes | 1 Byte | 4 Bytes |
+| UTF-16 | 1–2 Codeeinheiten mit je 16 Bit | 2 Bytes | 4 Bytes |
+| UTF-32 | 1 Codeeinheit mit 32 Bit | 4 Bytes | 4 Bytes |
+
+Diese Größen beziehen sich auf den codierten Inhalt, ohne Verwaltungsdaten oder Dateikopf. Ein Byte hat 8 Bit.
+
+C#-Strings sind Folgen von **UTF-16-Codeeinheiten**. Eine eingelesene oder geschriebene Datei kann dennoch UTF-8 verwenden: Beim Lesen werden Bytes decodiert, beim Schreiben wird der Text in Bytes encodiert. Werden Bytes mit einer unpassenden Codierung gelesen, kann eine fehlerhafte Darstellung entstehen.
+
+## 3. Die Datentypen `char` und `string`
+
+Ein `char` speichert genau **eine UTF-16-Codeeinheit** mit 16 Bit. Ein `string` ist eine Folge solcher Codeeinheiten.
 
 ```csharp
-string gruss = "Hallo Welt";
-string einzelnesZeichenAlsString = "A"; // Nicht zu verwechseln mit char 'A'
-string leererString = ""; // Ein String kann auch null Zeichen enthalten.
+char buchstabe = 'A';
+char euro = '€';
+string text = "Hallo Welt";
+string einZeichen = "A";
+string leer = "";
 ```
 
-## 5. Das Konzept der Unveränderlichkeit (Immutability)
+`char`-Literale stehen in einfachen, String-Literale in doppelten Anführungszeichen. `'A'` und `"A"` sehen in der Ausgabe gleich aus, haben aber verschiedene Typen. `""` ist ein gültiger leerer String; ein leerer `char` oder ein `char`-Literal mit mehreren Codeeinheiten ist nicht erlaubt.
 
-Ein `string` in C# ist **unveränderlich (immutable)**. Das bedeutet, dass ein einmal erstelltes String-Objekt in seinem Zustand nicht mehr modifiziert werden kann. Jede Operation, die einen String scheinbar ändert (wie das Umwandeln in Großbuchstaben oder das Anhängen von Text), erzeugt im Hintergrund ein **neues** String-Objekt mit dem geänderten Inhalt. Das ursprüngliche Objekt bleibt unberührt.
+### Ein sichtbares Zeichen kann mehrere Codeeinheiten benötigen
+
+Viele gebräuchliche Zeichen wie `A` oder `€` passen in eine einzelne UTF-16-Codeeinheit. Codepoints außerhalb der Basic Multilingual Plane, beispielsweise `😀`, benötigen zwei Codeeinheiten. Diese Kombination heißt **Surrogate-Pair**.
 
 ```csharp
-string text = "Hallo";
-
-// Die Methode ToUpper() erzeugt den neuen String "HALLO".
-// Da das Ergebnis keiner Variable zugewiesen wird, geht es sofort verloren.
-text.ToUpper(); 
-Console.WriteLine(text); // Gibt weiterhin "Hallo" aus.
-
-// Hier wird das neue Objekt in einer neuen Variable gespeichert.
-string neuerText = text.ToUpper(); 
-Console.WriteLine(neuerText); // Gibt "HALLO" aus.
+string wort = "Hi";
+string emoji = "😀";
+Console.WriteLine(wort.Length);  // 2
+Console.WriteLine(emoji.Length); // 2
 ```
 
-**Warum ist das so?** Die Unveränderlichkeit bietet mehrere Vorteile:
-*   **Vorhersagbarkeit und Sicherheit:** Wenn Sie einen String an eine Methode übergeben, können Sie sicher sein, dass diese Methode den ursprünglichen String nicht verändern kann.
-*   **Effizienz:** Mehrere Variablen können auf dasselbe String-Objekt im Speicher verweisen, ohne dass die Gefahr besteht, dass eine Variable den Wert für eine andere "mitändert".
+```text
+Text      UTF-16-Codeeinheiten         Length
+"Hi"      [ H ][ i ]                      2
+"😀"      [ D83D ][ DE00 ]                2
+             zusammen ein Emoji
+```
 
-Wegen der Immutability gilt als Faustregel: **Das Ergebnis einer String-Methode muss fast immer einer neuen oder derselben Variable zugewiesen werden.**
+`Length` zählt Codeeinheiten, nicht sichtbare Zeichen. Auch `"e\u0301"`, also `e` mit einem kombinierenden Akzent, hat die Länge 2. Für die Verarbeitung von Graphemen bietet .NET beispielsweise `System.Globalization.StringInfo`. In den Umkehr- und Palindromaufgaben verwenden wir einfache Buchstaben; das Umordnen einzelner `char`-Werte kann komplexere Zeichen beschädigen.
 
-## 6. Eigenschaften und Zugriff
+### Escape-Sequenzen
 
-### Die `Length`-Eigenschaft und der Index-Zugriff `[]`
+Ein Backslash leitet in normalen C#-Literalen eine Escape-Sequenz ein:
 
-Die `Length`-Eigenschaft eines Strings gibt die Gesamtzahl der `char`-Werte (UTF-16-Codeunits) an. Der Zugriff auf einzelne Zeichen erfolgt über einen **nullbasierten Index** mit eckigen Klammern `[]`. Das bedeutet, das erste Zeichen hat den Index 0, das zweite den Index 1 und so weiter.
+| Schreibweise | Bedeutung |
+|---|---|
+| `\n` | Zeilenumbruch (LF) |
+| `\t` | Tabulator |
+| `\"` | Doppeltes Anführungszeichen im String |
+| `\\` | Backslash |
+| `\u20AC` | UTF-16-Codeeinheit für `€`, vier Hex-Ziffern |
+| `\U0001F600` | Codepoint für `😀`, acht Hex-Ziffern |
 
 ```csharp
-string text = "C#-Code"; // text.Length ist 7
-// Index:   0123456
-
-// Zugriff auf das erste Zeichen
-char erstesZeichen = text;               // Ergibt 'C'
-
-// Zugriff auf das letzte Zeichen
-char letztesZeichen = text[text.Length - 1]; // Ergibt 'e'
+Console.WriteLine("Er sagt: \"Hallo!\"\nNächste Zeile.");
+char euro = '\u20AC';
+string emoji = "\U0001F600";
 ```
 
-**Achtung:** Der Versuch, auf einen Index zuzugreifen, der außerhalb des gültigen Bereichs liegt (z. B. kleiner als 0 oder größer/gleich `Length`), führt zu einer `IndexOutOfRangeException` und beendet das Programm mit einem Fehler. Das Muster `text.Length - 1` für den Zugriff auf das letzte Element ist ein universelles und wichtiges Konzept in der Programmierung.
+Die allgemeine Codepoint-Notation `U+20AC` und die Schreibweise `\u20AC` im C#-Literal beschreiben dasselbe Eurozeichen auf unterschiedliche Weise. Ein `\U`-Escape verlangt acht Hex-Ziffern und kann auch kleinere Codepoints darstellen.
 
-## 7. Iteration über Strings
+## 4. Länge, Indexzugriff und Eingaben
 
-Es gibt zwei primäre Methoden, um die Zeichen eines Strings zu durchlaufen:
+### Zählen ab 0
 
-### Iteration mit `foreach`
-
-Die `foreach`-Schleife ist der einfachste und lesbarste Weg, jedes Zeichen eines Strings zu verarbeiten, wenn die Position (der Index) des Zeichens nicht von Bedeutung ist.
-
-```csharp
-string text = "Hallo";
-
-// Die Schleife durchläuft jedes Zeichen in 'text'.
-// In jeder Iteration enthält die Variable 'buchstabe'
-// das nächste Zeichen.
-foreach (char buchstabe in text)
-{
-    Console.WriteLine(buchstabe);
-}
-```
-
-Diese Schleife ist weniger fehleranfällig als eine manuelle Index-Verwaltung und sollte bevorzugt werden, wenn nur der Wert der Zeichen benötigt wird.
-
-### Iteration mit `for`
-
-Eine `for`-Schleife bietet die volle Kontrolle über den Iterationsprozess, da sie direkt mit dem Index arbeitet. Sie ist notwendig, wenn die Position eines Zeichens für die Programmlogik relevant ist.
+Die Eigenschaft `Length` liefert die Anzahl der Codeeinheiten. Der Zugriff mit eckigen Klammern liefert einen einzelnen `char`-Wert. Indizes beginnen bei 0.
 
 ```csharp
 string text = "C#-Code";
+char erstes = text[0];                 // 'C'
+char letztes = text[text.Length - 1];  // 'e'
+```
 
-// Die Schleife läuft, solange der Index i kleiner als die Länge des Strings ist.
-for (int i = 0; i < text.Length; i++)
+```text
+Index:       0   1   2   3   4   5   6
+           ┌───┬───┬───┬───┬───┬───┬───┐
+Inhalt:    │ C │ # │ - │ C │ o │ d │ e │
+           └───┴───┴───┴───┴───┴───┴───┘
+Length:      7           letzter Index: 6
+```
+
+Für einen nicht leeren String gilt `0 <= index && index < text.Length`. Der letzte Index ist `Length - 1`. `text[text.Length]` ist immer außerhalb des gültigen Bereichs. Ein ungültiger Zugriff führt zur Laufzeit zu einer `IndexOutOfRangeException`.
+
+```csharp
+string text = "";
+if (text.Length > 0)
 {
-    char aktuellesZeichen = text[i];
-    Console.WriteLine($"Index {i}: {aktuellesZeichen}");
+    Console.WriteLine(text[text.Length - 1]);
+}
+else
+{
+    Console.WriteLine("Der Text ist leer.");
 }
 ```
 
-Diese Form der Iteration gibt die volle Kontrolle über Start, Ende und Schrittweite und ist unverzichtbar, wenn der Index des Zeichens für die Logik benötigt wird, z. B. um Zeichen von vorne und hinten zu vergleichen.
+Bei einem leeren String gibt es keinen gültigen Index, auch nicht 0. Die Prüfung muss vor dem Zugriff erfolgen. Beachten Sie außerdem: `Length` ist eine Eigenschaft ohne runde Klammern; Methoden werden mit Klammern aufgerufen.
 
-## 8. String-Formatierung
+### Leerer String, Leerzeichen und `null`
 
-Das Zusammenfügen von Strings und Variablen ist eine alltägliche Aufgabe.
+```csharp
+Console.Write("Text: ");
+string text = Console.ReadLine() ?? "";
+Console.WriteLine($"Länge: {text.Length}");
+```
 
-### Konkatenation mit dem `+`-Operator
+`Console.ReadLine()` liefert eine eingegebene Zeile ohne abschließenden Zeilenumbruch. Enter ohne Inhalt ergibt `""`; bei Eingabeende kann das Ergebnis `null` sein. Der Operator `??` verwendet den rechten Wert, wenn der linke `null` ist. Mit `?? ""` steht danach immer ein String für die weitere Verarbeitung zur Verfügung.
 
-Der `+`-Operator kann verwendet werden, um zwei oder mehr Strings zu verketten (aneinanderzufügen).
+| Wert | Bedeutung | Folge |
+|---|---|---|
+| `""` | Leerer String | Länge 0 |
+| `" "` | Ein Leerzeichen | Länge 1 |
+| `null` | Kein String vorhanden | Zugriff auf `.Length` führt zu einem Fehler |
+
+Das Eingabemuster behandeln wir in den Aufgaben als Standard. Ob eine leere Eingabe inhaltlich erlaubt ist, entscheidet die jeweilige Aufgabenstellung.
+
+## 5. Unveränderlichkeit von Strings
+
+Ein String-Objekt ist **unveränderlich (immutable)**. Eine Textoperation schreibt seinen Inhalt nicht um, sondern liefert einen Ergebniswert zurück. Wird ein anderer Text benötigt, kann die Variable anschließend auf diesen verweisen.
+
+```csharp
+string text = "Hallo";
+string kopie = text;
+text.ToUpper();
+Console.WriteLine(text); // Hallo
+
+text = text.ToUpper();
+Console.WriteLine(text);  // HALLO
+Console.WriteLine(kopie); // Hallo
+```
+
+Der erste Aufruf berechnet ein Ergebnis, verwendet es aber nicht weiter. Beim zweiten Aufruf wird das Ergebnis zugewiesen. Dabei gilt dieselbe Regel wie bei Berechnungen mit Zahlen: erst die rechte Seite auswerten, dann die linke Variable aktualisieren.
+
+```text
+Nach string kopie = text:       Nach text = text.ToUpper():
+text  ───┐                     text  ───→ "HALLO"
+         ├──→ "Hallo"
+kopie ───┘                     kopie ───→ "Hallo"
+```
+
+Mehrere Variablen können denselben unveränderlichen Text verwenden. Eine spätere Zuweisung an eine Variable verändert den Text der anderen nicht. Auch `text[0] = 'h';` ist nicht erlaubt: Der String-Indexer ist nur lesbar.
+
+**Merksatz:** Wenn Sie mit dem Ergebnis einer String-Methode weiterarbeiten möchten, müssen Sie es verwenden: etwa zuweisen, ausgeben, vergleichen oder an eine weitere Methode übergeben. Nicht jeder Methodenaufruf muss ein neues Objekt anlegen; ein unverändertes Ergebnis kann die vorhandene Instanz wiederverwenden.
+
+## 6. Strings durchlaufen und Zeichen untersuchen
+
+### `foreach`: die Werte lesen
+
+```csharp
+string text = "Code";
+foreach (char zeichen in text)
+{
+    Console.WriteLine(zeichen);
+}
+```
+
+Die Ausgabe enthält `C`, `o`, `d`, `e` auf jeweils einer Zeile. Pro Durchlauf erhält die Laufvariable die nächste Codeeinheit. Ein eigener Index ist nicht nötig. Ein leerer String führt zu null Durchläufen.
+
+### `for`: die Position mitverwenden
+
+```csharp
+string text = "Code";
+for (int i = 0; i < text.Length; i++)
+{
+    Console.WriteLine($"Index {i}: {text[i]}");
+}
+```
+
+Der Index nimmt die Werte 0, 1, 2 und 3 an. Bei `i == 4` ist die Bedingung falsch und es erfolgt kein Zugriff mehr. `i <= text.Length` wäre hier falsch, weil es den ungültigen Index 4 einschließt.
+
+Eine `for`-Schleife eignet sich, wenn Position, Startwert oder Schrittweite eine Rolle spielen. Beide Schleifenarten arbeiten hier mit Codeeinheiten; ein Emoji kann deshalb auf zwei Durchläufe verteilt werden.
+
+### Zeichen mit `char`-Methoden prüfen
+
+| Aufruf | Ergebnis | Zweck |
+|---|---|---|
+| `char.IsDigit('7')` | `true` | Dezimalziffer erkennen |
+| `char.IsLetter('ä')` | `true` | Buchstaben erkennen |
+| `char.IsUpper('A')` | `true` | Großbuchstaben erkennen |
+| `char.IsWhiteSpace(' ')` | `true` | Whitespace erkennen |
+| `char.ToLower('E')` | `'e'` | Kleinbuchstaben zurückgeben |
+
+Die `Is...`-Methoden liefern `bool`, `char.ToLower` liefert `char`. Die Methoden werden über den Typnamen `char` aufgerufen. Dagegen arbeitet `text.ToLower()` auf einem String und liefert einen String.
+
+`char.IsDigit` erkennt auch Unicode-Dezimalziffern außerhalb von `0` bis `9`. Verlangt eine Aufgabe ausschließlich ASCII-Ziffern, prüfen Sie den Bereich mit `zeichen >= '0' && zeichen <= '9'`.
+
+### Übungsblock 1: Zeichen untersuchen
+
+Bearbeiten Sie jetzt die Aufgaben **1–3** im [Aufgabenblatt](Aufgaben_5.md): Postleitzahl prüfen, Vokale zählen und Passwortanalyse. Dabei verbinden Sie Längenprüfung, Zeichenbedingungen und Schleifen. Planen Sie vor dem Programmieren, welche Werte während der Schleife erhalten bleiben müssen, und testen Sie die Kriterien unabhängig voneinander.
+
+## 7. Texte aufbauen und bereinigen
+
+### Konkatenation mit `+`
 
 ```csharp
 string vorname = "Max";
 string nachname = "Mustermann";
-
-// Mehrere Strings werden zu einem neuen String zusammengefügt.
-string vollerName = vorname + " " + nachname; // Ergebnis: "Max Mustermann"
-
+string vollerName = vorname + " " + nachname;
 Console.WriteLine("Benutzer: " + vollerName);
 ```
 
-Diese Methode ist einfach und intuitiv für wenige Verknüpfungen. Bei vielen Operationen, insbesondere in Schleifen, kann sie jedoch ineffizient sein, da bei jeder Konkatenation ein neues String-Objekt erzeugt wird.
+Konkatenation bedeutet Verketten. Das Leerzeichen zwischen den Namen wird ausdrücklich als Text hinzugefügt. Die Variablen `vorname` und `nachname` werden dadurch nicht verändert.
 
-### String-Interpolation mit `$`
+Der Operator `+` kann sowohl addieren als auch Text verketten. Entscheidend sind die beteiligten Typen und die Auswertungsreihenfolge:
 
-String-Interpolation ist der moderne, lesbare und empfohlene Ansatz in C#. Ein String-Literal wird mit einem `$`-Zeichen eingeleitet. Variablen oder Ausdrücke können dann direkt in geschweiften Klammern `{}` in den String eingebettet werden.
+```csharp
+Console.WriteLine(2 + 3 + " Punkte");   // 5 Punkte
+Console.WriteLine("Punkte: " + 2 + 3);  // Punkte: 23
+Console.WriteLine("Punkte: " + (2 + 3)); // Punkte: 5
+```
+
+Diese Ausdrücke werden unter Beachtung der Klammern von links nach rechts ausgewertet. Bei `"Punkte: " + 2` entsteht bereits ein String; die folgende `3` wird angehängt. Dagegen ergibt `char + char` eine numerische Addition, keine Textverkettung.
+
+Bei wiederholten Verkettungen in Schleifen können viele Zwischenwerte und Kopieroperationen entstehen. Für kurze Übungstexte ist der einfache Aufbau ausreichend. Für umfangreiches Zusammensetzen bietet .NET unter anderem `StringBuilder`.
+
+### Interpolation mit `$`
 
 ```csharp
 string name = "Anna";
-int alter = 28;
-
-// Die Werte von 'name' und 'alter' werden direkt in den String eingesetzt.
-string gruss = $"Name: {name}, Alter: {alter}.";
-
-Console.WriteLine(gruss); // Ausgabe: Name: Anna, Alter: 28.
+int anzahl = 3;
+Console.WriteLine($"{name} hat {anzahl} Nachrichten.");
+Console.WriteLine($"Morgen sind es {anzahl + 1}.");
 ```
 
-Interpolation erhöht die Lesbarkeit des Codes erheblich, da die finale Struktur des Strings direkt im Code sichtbar ist. Sie sollte als Standardmethode zur String-Formatierung verwendet werden.
+Interpolation setzt Werte oder Ergebnisse von Ausdrücken in `{...}` ein. Das vorangestellte `$` aktiviert diese Schreibweise. Ohne `$` werden die geschweiften Klammern und Namen wörtlich ausgegeben.
 
-## 9. Wichtige String-Methoden
-
-Die `string`-Klasse in C# bietet eine Vielzahl nützlicher Methoden zur Bearbeitung und Analyse von Texten. Hier sind einige der wichtigsten:
-
-### `ToUpper()` / `ToLower()`
-
-Diese Methoden geben einen **neuen** String zurück, in dem alle Buchstaben in Groß- bzw. Kleinbuchstaben umgewandelt wurden. Das Original-Objekt bleibt unverändert.
+### Groß-/Kleinschreibung
 
 ```csharp
 string original = "MischText";
-string gross = original.ToUpper(); // Ergibt "MISCHTEXT"
-string klein = original.ToLower(); // Ergibt "mischtext"
+string gross = original.ToUpper(); // "MISCHTEXT"
+string klein = original.ToLower(); // "mischtext"
+Console.WriteLine(original);       // MischText
 ```
 
-Diese Methoden sind besonders nützlich für Vergleiche, bei denen die Groß- und Kleinschreibung ignoriert werden soll.
+Stringvergleiche mit `==` unterscheiden Groß- und Kleinschreibung: `"Code" == "code"` ergibt `false`. Die Umwandlung in eine gemeinsame Schreibweise kann einfache Eingaben für die weitere Verarbeitung vorbereiten.
 
-### `Trim()`
+`ToUpper()` und `ToLower()` verwenden standardmäßig die aktuelle Kultur. Für technische Vergleiche ohne Beachtung der Groß-/Kleinschreibung gibt es beispielsweise `string.Equals(a, b, StringComparison.OrdinalIgnoreCase)`. Die Umwandlung in Kleinbuchstaben ersetzt keine allgemeine Unicode-Normalisierung.
 
-Die `Trim()`-Methode gibt einen neuen String zurück, bei dem alle führenden und nachgestellten Whitespace-Zeichen (Leerzeichen, Tabulatoren, Zeilenumbrüche) entfernt wurden.
+### Whitespace an den Rändern entfernen
 
 ```csharp
-string userInput = "   Wichtige Eingabe   ";
-string bereinigt = userInput.Trim(); // Ergibt "Wichtige Eingabe"
+string eingabe = "   Hallo Welt   ";
+string bereinigt = eingabe.Trim();
+Console.WriteLine($"[{bereinigt}]"); // [Hallo Welt]
 ```
 
-Dies ist ein Standardverfahren zur Bereinigung von Benutzereingaben, um Fehler bei Vergleichen oder der Weiterverarbeitung zu vermeiden, die durch unsichtbare Zeichen entstehen können.
+`Trim()` entfernt Whitespace am Anfang und Ende, einschließlich Leerzeichen, Tabulatoren und Zeilenumbrüchen. Abstände im Inneren bleiben erhalten. `"   ".Trim()` ergibt den leeren String.
 
-### `IndexOf()`
+```text
+Vorher:   [···Hallo·Welt···]
+Nachher:  [Hallo·Welt]
+           · markiert hier ein Leerzeichen
+```
 
-Diese Methode sucht nach dem ersten Vorkommen eines Zeichens oder einer Zeichenkette innerhalb eines Strings und gibt dessen nullbasierten Startindex zurück. Wenn der gesuchte Text nicht gefunden wird, gibt die Methode `-1` zurück.
+### Verarbeitungsschritte verketten
+
+```csharp
+string eingabe = "  SCHRAUBE  ";
+string bereinigt = eingabe.Trim();
+string normalisiert = bereinigt.ToLower();
+```
+
+Die Verarbeitung lässt sich als Folge von Ergebniswerten lesen:
+
+```text
+"  SCHRAUBE  " → Trim() → "SCHRAUBE" → ToLower() → "schraube"
+```
+
+Alternativ können Sie die Aufrufe verketten:
+
+```csharp
+string normalisiert = eingabe.Trim().ToLower();
+```
+
+Die beiden Schreibweisen sind Alternativen und werden nicht mit derselben Variablendeklaration zusammen eingefügt. Die ursprüngliche Variable `eingabe` bleibt in beiden Fällen unverändert. „Normalisieren“ meint hier die Vereinheitlichung für einen konkreten Anwendungsfall, nicht die Unicode-Operation `Normalize()`.
+
+### Übungsblock 2: Texte aufbauen und vergleichen
+
+Bearbeiten Sie jetzt die Aufgaben **4–6**: Text umkehren, Antworten vereinheitlichen und Palindrom-Prüfung. Die Werkzeuge sind bekannt; Reihenfolge, Bedingungen und Schleifenlogik entwickeln Sie selbst. Eine Skizze mit Indizes hilft bei Aufgaben, in denen Zeichen in einer anderen Reihenfolge gelesen oder miteinander verglichen werden.
+
+## 8. Textstellen finden und verarbeiten
+
+### `IndexOf`: erste Fundstelle suchen
 
 ```csharp
 string text = "Hallo Welt, schöne Welt!";
-int position1 = text.IndexOf("Welt");  // Ergibt 6 (der Startindex von "Welt")
-int position2 = text.IndexOf("Erde");  // Ergibt -1 (da "Erde" nicht enthalten ist)
+int position = text.IndexOf("Welt"); // 6
+int fehlt = text.IndexOf("Erde");    // -1
 ```
 
-`IndexOf` ist fundamental, um zu prüfen, ob ein Text einen anderen enthält, und um dessen Position zu bestimmen.
+`IndexOf` liefert den Startindex des ersten Treffers. Ein Treffer kann auch an Position 0 liegen. `-1` bedeutet, dass der Suchtext nicht gefunden wurde. Prüfen Sie deshalb `position >= 0`, wenn Sie wissen möchten, ob ein Treffer vorliegt.
 
-### `Substring()`
+```text
+Index:   0 1 2 3 4 5 6 7 8 9 ...
+Text:    H a l l o · W e l t ...
+                     ↑ erster Treffer
+```
 
-`Substring()` extrahiert einen Teilstring. Es gibt zwei Überladungen:
-1.  `Substring(int startIndex)`: Extrahiert den Teil vom `startIndex` bis zum Ende des Strings.
-2.  `Substring(int startIndex, int length)`: Extrahiert einen Teil mit einer bestimmten `length` ab dem `startIndex`.
+Der gezeigte Aufruf mit einem String sucht standardmäßig kulturabhängig. Für technische String-Suchen lässt sich die Überladung mit `StringComparison.Ordinal` verwenden. Mit `IndexOf('#')` können Sie nach einem einzelnen `char` suchen.
+
+### `Substring`: Teiltext ausschneiden
 
 ```csharp
 string text = "Programmieren";
-
-// 1. Ab Startindex 8 bis zum Ende
-string teil1 = text.Substring(8); // Ergibt "ieren"
-
-// 2. Ab Startindex 0 mit einer Länge von 4 Zeichen
-string teil2 = text.Substring(0, 4); // Ergibt "Prog"
+string anfang = text.Substring(0, 4); // "Prog"
+string ende = text.Substring(8);     // "ieren"
 ```
 
-Diese Methode wird oft in Kombination mit `IndexOf` verwendet, um dynamisch Textteile basierend auf Trennzeichen oder Schlüsselwörtern zu extrahieren.
+`Substring(start)` liefert den Text ab dem Startindex bis zum Ende. `Substring(start, länge)` liefert eine bestimmte Anzahl von Codeeinheiten. Der zweite Parameter ist **kein Endindex**.
 
-### `Replace()`
+```text
+Index:    0 1 2 3 4 5 6 7 8 9 10 11 12
+Text:     P r o g r a m m i e  r  e  n
+          └─────┘         └──────────┘
+          Start 0         Start 8 bis Ende
+          Länge 4
+```
 
-Diese Methode gibt einen neuen String zurück, in dem alle Vorkommen eines bestimmten Zeichens oder einer Zeichenkette durch eine andere ersetzt wurden.
+Start und Länge dürfen nicht negativ sein; der Start darf höchstens `Length` betragen und `start + länge` darf nicht hinter dem Ende liegen. Ungültige Argumente führen zu einer `ArgumentOutOfRangeException`. Anders als beim einzelnen Indexzugriff ist `text.Substring(text.Length)` erlaubt und liefert `""`.
+
+### Suchergebnisse absichern
 
 ```csharp
-string satz = "Ein guter Tag ist ein schöner Tag.";
-string neuerSatz = satz.Replace("Tag", "Moment"); 
-// Ergibt: "Ein guter Moment ist ein schöner Moment."
+string notiz = "Raum #204";
+int position = notiz.IndexOf('#');
+if (position >= 0)
+{
+    Console.WriteLine($"Markierung an Position {position}.");
+}
+else
+{
+    Console.WriteLine("Keine Markierung gefunden.");
+}
 ```
 
-Auch hier ist es wichtig, sich an die Unveränderlichkeit zu erinnern: `Replace` modifiziert nicht den ursprünglichen String, sondern gibt eine neue, modifizierte Kopie zurück. Das Ergebnis muss also einer Variablen zugewiesen werden.
+Das Muster lautet: suchen, Rückgabewert prüfen, abhängig davon weiterarbeiten. Weitere Prüfungen hängen von der anschließenden Operation ab. Ein gültiger Treffer allein sagt beispielsweise noch nicht, dass vor oder nach der Fundstelle weiterer Text vorhanden ist.
+
+### `Replace`: Vorkommen ersetzen
+
+```csharp
+string text = "Ein Tag ist ein Tag.";
+string ersetzt = text.Replace("Tag", "Moment");
+Console.WriteLine(ersetzt); // Ein Moment ist ein Moment.
+Console.WriteLine(text);    // Ein Tag ist ein Tag.
+```
+
+Die gezeigte Überladung ersetzt alle exakt passenden Vorkommen und unterscheidet Groß- und Kleinschreibung. Sie prüft keine Wortgrenzen: Der Suchtext `"Tag"` passt auch in `"Tagung"`. Der alte Suchtext darf nicht leer sein; eine leere Suche löst eine `ArgumentException` aus.
+
+Der Originaltext bleibt unverändert. Möchten Sie Original und Ergebnis vergleichen oder beide ausgeben, bewahren Sie sie in getrennten Variablen auf.
+
+### Übungsblock 3: Textteile verarbeiten
+
+Bearbeiten Sie jetzt die Aufgaben **7–9**: E-Mail-Adresse zerlegen, Suchtext ersetzen und Wörter zählen. Verbinden Sie die Werkzeuge mit eigenen Prüfungen. Legen Sie vorab fest, welche Eingaben gültig sind und was bei fehlenden Trennzeichen, leeren Suchtexten oder mehreren Leerzeichen passieren soll. Die vereinfachten Regeln aus dem Aufgabenblatt bestimmen das erwartete Verhalten.
+
+## 9. Werkzeugübersicht und typische Fehler
+
+| Zweck | Werkzeug | Ergebnis |
+|---|---|---|
+| Anzahl der Codeeinheiten | `text.Length` | `int` |
+| Einzelne Codeeinheit lesen | `text[i]` | `char` |
+| Codeeinheiten durchlaufen | `foreach` oder `for` | Verarbeitung in der Schleife |
+| Groß-/Kleinschreibung ändern | `ToUpper()`, `ToLower()` | `string` |
+| Ränder bereinigen | `Trim()` | `string` |
+| Erste Fundstelle suchen | `IndexOf(...)` | `int`, bei fehlendem Treffer `-1` |
+| Teiltext ausschneiden | `Substring(...)` | `string` |
+| Vorkommen ersetzen | `Replace(...)` | `string` |
+
+| Fehler | Ursache | Vorgehen |
+|---|---|---|
+| `text.Length()` | Eigenschaft wie Methode verwendet | `text.Length` schreiben |
+| `text[text.Length]` | Index hinter dem Ende | Vorher prüfen, dann ggf. `Length - 1` nutzen |
+| `i <= text.Length` beim Vorwärtsdurchlauf | Ein Durchlauf zu viel | `i < text.Length` verwenden |
+| `text.Trim();` ohne weitere Verwendung | Ergebnis verworfen | Ergebnis zuweisen oder direkt verwenden |
+| `position > 0` für „gefunden“ | Treffer am Anfang übersehen | `position >= 0` prüfen |
+| `Substring(2, 5)` als Bereich 2 bis 5 lesen | Anzahl mit Endindex verwechselt | 5 Codeeinheiten ab Index 2 |
+| Sichtbares Zeichen mit einem `char` gleichsetzen | UTF-16-Darstellung übersehen | Codeeinheiten, Codepoints und Grapheme unterscheiden |
+
+Unterscheiden Sie beim Prüfen eines Programms Compilerfehler, Laufzeitfehler und falsche Ergebnisse. Überlegen Sie zuerst die erwartete Ausgabe und vergleichen Sie diese anschließend mit dem tatsächlichen Verhalten. Nutzen Sie neben Erfolgsfällen auch leere Eingaben, Grenzfälle und Eingaben, die einzelne Bedingungen gezielt verletzen.
